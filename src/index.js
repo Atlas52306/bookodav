@@ -1,9 +1,9 @@
-
 import html from '../src/public/dash/index.html'
 import upload from '../src/public/dash/upload.html'
 import list from '../src/public/dash/list.html'
 import instructions from '../src/public/dash/wiki.html'
 import notfoundpage from '../src/public/dash/404.html'
+import styles from '../src/public/dash/styles.css'
 import { corsHeaders, is_authorized } from './utils'
 import { dumpCache, handleDeleteFile, handleFileList, handleGetFile, handleMultpleUploads, handlePutFile } from './handlers'
 // MIME type mapping based on file extensions
@@ -23,6 +23,8 @@ function handleUiRouting(path) {
 			return list
 		case "/dav":
 			return instructions;
+		case "/dav/styles.css":
+			return styles;
 		default:
 			return notfoundpage;
 	}
@@ -52,11 +54,12 @@ export default {
 			});
 		}
 
-		if (request.method === "GET" && path === "/") {
-			// Fetch favicon from R2 bucket
-			return new Response(handleUiRouting(path), {
+		if (request.method === "GET" && (path === "/" || path.startsWith("/dav"))) {
+			const content = handleUiRouting(path);
+			const contentType = path.endsWith('.css') ? 'text/css' : 'text/html';
+			return new Response(content, {
 				headers: {
-					"Content-Type": "text/html",
+					"Content-Type": contentType,
 					"Cache-Control": "public, max-age=604800"
 				},
 			});
@@ -77,16 +80,6 @@ export default {
 
 
 		// dashboard
-
-		if (request.method === "GET" && path.includes("/dav")) {
-			return new Response(handleUiRouting(path), {
-				headers: {
-					"Content-Type": "text/html",
-					"Cache-Control": "public, max-age=604800"
-				},
-			});
-
-		}
 
 		if (request.method === "GET" && path === "/dumpcache") {
 			return dumpCache(request, env, ctx);
