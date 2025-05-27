@@ -28,11 +28,18 @@ jobs:
       - name: 安装依赖
         run: pnpm install
         
+      - name: 升级Wrangler到最新版本
+        run: pnpm add -D wrangler@latest
+        
       - name: 部署
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CF_API_TOKEN }}
-          wranglerVersion: "3.111.0"
+          accountId: ${{ secrets.CF_ACCOUNT_ID }}
+          wranglerVersion: "latest"
+          command: deploy
           preCommands: |
             echo "正在使用pnpm版本:"
             pnpm --version
+            echo "正在使用Wrangler版本:"
+            pnpm exec wrangler --version
