@@ -6,45 +6,30 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="color-scheme" content="light dark">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@yohns/picocss@2.2.10/css/pico.min.css">
-    <style>
-
-        .dump-cache{
-            display: flex;
-            align-items: center;
-            justify-content: end;
-        }
-
-        .footer {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-        }
-
-        .w3c {
-          width: 64px;
-        }
-      </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
     <title>BOOKO-DAV - 文件列表</title>
 </head>
 
 <body>
+    <header class="container">
+        <nav>
+            <ul class="contrast">
+                <li><strong><i class="fas fa-book"></i> BOOKO-DAV</strong></li>
+            </ul>
+            <ul>
+                <li><a href="/dav"><i class="fas fa-book-open"></i> 使用指南</a></li>
+                <li><a href="/dav/upload"><i class="fas fa-upload"></i> 上传</a></li>
+                <li><a href="/dav/list" class="nav-button"><i class="fas fa-list"></i> 查看文档</a></li>
+            </ul>
+        </nav>
+    </header>
+
     <main class="container">
-        <header class="container">
-            <nav>
-                <ul class="contrast">
-                    <li><strong>BOOKO-DAV</strong></li>
-                </ul>
-                <ul>
-                    <li><a href="/dav">使用指南</a></li>
-                    <li><a href="/dav/upload">上传</a></li>
-                    <li><a href="/dav/list">查看文档</a></li>
-                </ul>
-            </nav>
-        </header>
         <section>
-            <h2>文件列表</h2>
-            <div class="dump-cache" >
-                <button class="outline" type="button" onclick="dumpCache()" >清除缓存</button>
+            <h2><i class="fas fa-file-alt"></i> 文件列表</h2>
+            <div class="dump-cache">
+                <button class="outline" type="button" onclick="dumpCache()"><i class="fas fa-trash"></i> 清除缓存</button>
             </div>
             <div class="overflow-auto">
                 <table>
@@ -63,105 +48,108 @@
                 </table>
             </div>
         </section>
-        <footer></footer>
 
-        <script>
-            // 获取并显示文件列表
-            async function loadFileList() {
-                try {
-                    const response = await fetch('/', { method: 'PROPFIND' }); // 替换为您的端点
-                    const data = await response.text();
-
-                    // 解析XML响应
-                    const parser = new DOMParser();
-                    const xmlDoc = parser.parseFromString(data, "application/xml");
-
-                    // 提取文件详情
-                    const files = xmlDoc.querySelectorAll('D\\:response, response'); // 处理"D:"和无命名空间
-                    const fileList = document.getElementById('fileList');
-                    fileList.innerHTML = ''; // 清除现有内容
-
-                    files.forEach(file => {
-                        const href = file.querySelector('D\\:href, href').textContent;
-                        const size = file.querySelector('D\\:getcontentlength, getcontentlength')?.textContent || 'N/A';
-                        const lastModified = file.querySelector('D\\:getlastmodified, getlastmodified')?.textContent || 'N/A';
-
-                        // 跳过根目录条目
-                        if (href === '/') return;
-
-                        // 为每个文件创建表格行
-                        const row = document.createElement('tr');
-                        console.log("hrefhrefhrefhrefhrefhrefhrefhref",href);
-
-                        row.innerHTML = `
-                            <td>${decodeURIComponent(href.split('/').pop())}</td>
-                            <td>${formatBytes(size)}</td>
-                            <td>${new Date(lastModified).toLocaleString()}</td>
-                            <td><a href="${href}" download>下载</a></td>
-                            <td><button onclick="deleteFile('${href}')">删除</button></td>
-                        `;
-                        fileList.appendChild(row);
-                    });
-                } catch (error) {
-                    console.error('加载文件列表时出错:', error);
-                    document.getElementById('fileList').innerHTML = `<tr><td colspan="5">无法加载文件列表。</td></tr>`;
-                }
-            }
-
-            // 辅助函数，用于格式化文件大小
-            function formatBytes(bytes) {
-                if (bytes === 'N/A') return 'N/A';
-                bytes = parseInt(bytes);
-                if (bytes === 0) return '0 字节';
-                const k = 1024;
-                const sizes = ['字节', 'KB', 'MB', 'GB', 'TB'];
-                const i = Math.floor(Math.log(bytes) / Math.log(k));
-                return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
-            }
-
-            async function dumpCache(){
-                if (confirm('确定要删除缓存吗？')) {
-                    try {
-                        const response = await fetch('/dumpcache', { method: 'GET' });
-                        if (response.ok) {
-                            alert('缓存已成功删除！');
-                            loadFileList(); // 刷新文件列表
-                        } else {
-                            alert('删除缓存失败: ' + response.statusText);
-                        }
-                    } catch (error) {
-                        alert('删除缓存时出错: ' + error.message);
-                    }
-                }
-            }
-            // 删除文件
-            async function deleteFile(filePath) {
-                if (confirm('确定要删除此文件吗？')) {
-                    try {
-                        const response = await fetch(filePath, { method: 'DELETE' });
-                        if (response.ok) {
-                            alert('文件已成功删除！');
-                            loadFileList(); // 刷新文件列表
-                        } else {
-                            alert('删除文件失败: ' + response.statusText);
-                        }
-                    } catch (error) {
-                        alert('删除文件时出错: ' + error.message);
-                    }
-                }
-            }
-
-            // 页面加载时加载文件列表
-            window.onload = loadFileList;
-        </script>
         <footer class="footer">
             <span>
                 <span id="year"></span> &copy; Atlas
-
             </span>
         </footer>
     </main>
+
     <script>
+        // 获取并显示文件列表
+        async function loadFileList() {
+            try {
+                const response = await fetch('/', { method: 'PROPFIND' }); // 替换为您的端点
+                const data = await response.text();
+
+                // 解析XML响应
+                const parser = new DOMParser();
+                const xmlDoc = parser.parseFromString(data, "application/xml");
+
+                // 提取文件详情
+                const files = xmlDoc.querySelectorAll('D\\:response, response'); // 处理"D:"和无命名空间
+                const fileList = document.getElementById('fileList');
+                fileList.innerHTML = ''; // 清除现有内容
+
+                files.forEach(file => {
+                    const href = file.querySelector('D\\:href, href').textContent;
+                    const size = file.querySelector('D\\:getcontentlength, getcontentlength')?.textContent || 'N/A';
+                    const lastModified = file.querySelector('D\\:getlastmodified, getlastmodified')?.textContent || 'N/A';
+
+                    // 跳过根目录条目
+                    if (href === '/') return;
+
+                    // 为每个文件创建表格行
+                    const row = document.createElement('tr');
+
+                    row.innerHTML = `
+                        <td>${decodeURIComponent(href.split('/').pop())}</td>
+                        <td>${formatBytes(size)}</td>
+                        <td>${new Date(lastModified).toLocaleString()}</td>
+                        <td><a href="${href}" download><i class="fas fa-download"></i> 下载</a></td>
+                        <td><button onclick="deleteFile('${href}')"><i class="fas fa-trash"></i> 删除</button></td>
+                    `;
+                    fileList.appendChild(row);
+                });
+                
+                // 如果没有文件，显示提示
+                if (fileList.children.length === 0) {
+                    fileList.innerHTML = `<tr><td colspan="5" style="text-align: center;">无法加载文件列表或当前没有文件。</td></tr>`;
+                }
+            } catch (error) {
+                console.error('加载文件列表时出错:', error);
+                document.getElementById('fileList').innerHTML = `<tr><td colspan="5" style="text-align: center;">无法加载文件列表。</td></tr>`;
+            }
+        }
+
+        // 辅助函数，用于格式化文件大小
+        function formatBytes(bytes) {
+            if (bytes === 'N/A') return 'N/A';
+            bytes = parseInt(bytes);
+            if (bytes === 0) return '0 字节';
+            const k = 1024;
+            const sizes = ['字节', 'KB', 'MB', 'GB', 'TB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+
+        async function dumpCache() {
+            if (confirm('确定要删除缓存吗？')) {
+                try {
+                    const response = await fetch('/dumpcache', { method: 'GET' });
+                    if (response.ok) {
+                        alert('缓存已成功删除！');
+                        loadFileList(); // 刷新文件列表
+                    } else {
+                        alert('删除缓存失败: ' + response.statusText);
+                    }
+                } catch (error) {
+                    alert('删除缓存时出错: ' + error.message);
+                }
+            }
+        }
+        // 删除文件
+        async function deleteFile(filePath) {
+            if (confirm('确定要删除此文件吗？')) {
+                try {
+                    const response = await fetch(filePath, { method: 'DELETE' });
+                    if (response.ok) {
+                        alert('文件已成功删除！');
+                        loadFileList(); // 刷新文件列表
+                    } else {
+                        alert('删除文件失败: ' + response.statusText);
+                    }
+                } catch (error) {
+                    alert('删除文件时出错: ' + error.message);
+                }
+            }
+        }
+
+        // 页面加载时加载文件列表
+        window.onload = loadFileList;
+        
+        // 设置年份
         const yearElement = document.querySelector("#year")
         const year = new Date().getFullYear()
         yearElement.innerHTML = year

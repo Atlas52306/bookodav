@@ -6,94 +6,46 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="color-scheme" content="light dark">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@yohns/picocss@2.2.10/css/pico.min.css">
-  <style>
-    .error {
-      color: #dc3545;
-      padding: 1rem;
-      border: 1px solid #dc3545;
-      border-radius: 4px;
-      margin: 1rem 0;
-
-      ul {
-        color: var(--pico-contrast-inverse);
-      }
-    }
-
-    .footer {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .w3c {
-      width: 64px;
-    }
-
-    .success {
-      color: var(--pico-primary);
-      padding: 1rem;
-      border: 1px solid #28a745;
-      border-radius: 4px;
-      margin: 1rem 0;
-
-      ul {
-        color: var(--pico-contrast-inverse);
-      }
-    }
-
-    .info {
-      color: #17a2b8;
-      padding: 0.5rem;
-      margin: 0.5rem 0;
-
-      ul {
-        color: var(--pico-contrast-inverse);
-      }
-    }
-
-    [role="alert"] {
-      background-color: #f8d7da;
-    }
-
-    [role="status"] {
-      background-color: #d4edda;
-    }
-  </style>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="styles.css">
   <title>BOOKO-DAV - 上传</title>
 </head>
 
 <body>
+  <header class="container">
+    <nav>
+      <ul class="contrast">
+        <li><strong><i class="fas fa-book"></i> BOOKO-DAV</strong></li>
+      </ul>
+      <ul>
+        <li><a href="/dav"><i class="fas fa-book-open"></i> 使用指南</a></li>
+        <li><a href="/dav/upload" class="nav-button"><i class="fas fa-upload"></i> 上传</a></li>
+        <li><a href="/dav/list"><i class="fas fa-list"></i> 查看文档</a></li>
+      </ul>
+    </nav>
+  </header>
+
   <main class="container">
-    <header class="container">
-      <nav>
-        <ul class="contrast">
-          <li><strong>BOOKO-DAV</strong></li>
-        </ul>
-        <ul>
-          <li><a href="/dav">使用指南</a></li>
-          <li><a href="/dav/upload">上传</a></li>
-          <li><a href="/dav/list">查看文档</a></li>
-        </ul>
-      </nav>
-    </header>
     <section>
-      <h2>上传文件</h2>
-      <form id="uploadForm" action="/upload" method="POST" enctype="multipart/form-data">
-        <label for="files">选择要上传的文件：</label>
-        <input type="file" id="files" name="files" required multiple
-          accept=".epub,.pdf,.mobi,.cbr,.cbz,.jpg,.jpeg,.png,.gif,.webp">
-        <!-- 使用type="button"防止原生提交 -->
-        <button type="submit" id="uploadButton">上传</button>
-      </form>
-      <div id="uploadStatus"></div>
+      <h2><i class="fas fa-cloud-upload-alt"></i> 上传文件</h2>
+      <div class="feature-card">
+        <form id="uploadForm" action="/upload" method="POST" enctype="multipart/form-data">
+          <label for="files"><i class="fas fa-file-alt"></i> 选择要上传的文件：</label>
+          <input type="file" id="files" name="files" required multiple
+            accept=".epub,.pdf,.mobi,.cbr,.cbz,.jpg,.jpeg,.png,.gif,.webp">
+          <button type="submit" id="uploadButton"><i class="fas fa-cloud-upload-alt"></i> 上传</button>
+        </form>
+        <div id="uploadStatus"></div>
+      </div>
     </section>
+    
     <footer class="footer">
       <span>
         <span id="year"></span> &copy; Atlas
-
       </span>
     </footer>
   </main>
+  
   <script>
     const yearElement = document.querySelector("#year")
     const year = new Date().getFullYear()
@@ -168,7 +120,7 @@
 
         // 上传期间禁用按钮
         uploadButton.disabled = true;
-        uploadButton.textContent = '上传中...';
+        uploadButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 上传中...';
 
         const formData = new FormData();
         files.forEach(file => formData.append('files', file));
@@ -188,12 +140,12 @@
           const failures = data.filter(item => item.status === 'failed');
 
           let resultHtml = `<div class="success" role="status">
-                              <span>成功上传 ${success.length} 个文件:</span>
+                              <span><i class="fas fa-check-circle"></i> 成功上传 ${success.length} 个文件:</span>
                               <ul>${success.map(f => `<li>${f.sanitizedFilename}</li>`).join('')}</ul>`;
 
           if (failures.length > 0) {
             resultHtml += `<div class="error" role="alert">
-                             <p>上传失败 ${failures.length} 个文件:</p>
+                             <p><i class="fas fa-exclamation-triangle"></i> 上传失败 ${failures.length} 个文件:</p>
                              <ul>${failures.map(f => `<li>${f.filename}: ${f.error}</li>`).join('')}</ul>
                              </div>`;
           }
@@ -207,17 +159,17 @@
           await fetch('/dash/list', { headers: { 'Cache-Control': 'no-cache' } });
 
         } catch (error) {
-          showError(`上传失败: ${error.message}`);
+          showError(`<i class="fas fa-exclamation-circle"></i> 上传失败: ${error.message}`);
         } finally {
           uploadButton.disabled = false;
-          uploadButton.textContent = '上传';
+          uploadButton.innerHTML = '<i class="fas fa-cloud-upload-alt"></i> 上传';
         }
       });
 
       // 文件选择的视觉反馈
       fileInput.addEventListener('change', function () {
         if (this.files.length > 0) {
-          uploadStatus.innerHTML = `<div class="info">已选择 ${this.files.length} 个文件</div>`;
+          uploadStatus.innerHTML = `<div class="info"><i class="fas fa-info-circle"></i> 已选择 ${this.files.length} 个文件</div>`;
         }
       });
     });

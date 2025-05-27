@@ -6,46 +6,39 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="color-scheme" content="light dark">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@yohns/picocss@2.2.10/css/pico.min.css">
-  <style>
-    .footer {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .w3c {
-      width: 64px;
-    }
-  </style>
-  <title>BOOKO-DAV</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="styles.css">
+  <title>BOOKO-DAV - 页面未找到</title>
 </head>
 
 <body>
+  <header class="container">
+    <nav>
+      <ul class="contrast">
+        <li><strong><i class="fas fa-book"></i> BOOKO-DAV</strong></li>
+      </ul>
+      <ul>
+        <li><a href="/dav"><i class="fas fa-book-open"></i> 使用指南</a></li>
+        <li><a href="/dav/upload"><i class="fas fa-upload"></i> 上传</a></li>
+        <li><a href="/dav/list"><i class="fas fa-list"></i> 查看文档</a></li>
+      </ul>
+    </nav>
+  </header>
+
   <main class="container">
-    <header class="container">
-      <nav>
-        <ul class="contrast">
-          <li><strong>BOOKO-DAV</strong></li>
-        </ul>
-        <ul>
-          <li><a href="/dav">使用指南</a></li>
-          <li><a href="/dav/upload">上传</a></li>
-          <li><a href="/dav/list">查看文档</a></li>
-        </ul>
-      </nav>
-    </header>
-
-
-    <section>
-      404 - 页面未找到
+    <section class="error-page">
+      <h1>404</h1>
+      <p><i class="fas fa-exclamation-circle"></i> 很抱歉，您请求的页面不存在</p>
+      <a href="/dav" class="button"><i class="fas fa-home"></i> 返回首页</a>
     </section>
+    
     <footer class="footer">
       <span>
         <span id="year"></span> &copy; Atlas
-
       </span>
     </footer>
   </main>
+  
   <script>
     const yearElement = document.querySelector("#year")
     const year = new Date().getFullYear()

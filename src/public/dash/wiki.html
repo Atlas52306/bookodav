@@ -5,39 +5,31 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1" >
 		<meta name="color-scheme" content="light dark" >
 		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@yohns/picocss@2.2.10/css/pico.min.css" >
-		<style>
-			.footer {
-				display: flex;
-				align-items: center;
-				justify-content: space-between;
-			}
-			.w3c {
-				width: 64px;
-			}
-		</style>
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+		<link rel="stylesheet" href="styles.css">
 		<title>BOOKO-DAV - 使用说明</title>
 	</head>
 
 	<body>
+		<header class="container">
+			<nav>
+				<ul class="contrast">
+					<li><strong><i class="fas fa-book"></i> BOOKO-DAV</strong></li>
+				</ul>
+				<ul>
+					<li><a href="/dav" class="nav-button"><i class="fas fa-book-open"></i> 使用指南</a></li>
+					<li><a href="/dav/upload"><i class="fas fa-upload"></i> 上传</a></li>
+					<li><a href="/dav/list"><i class="fas fa-list"></i> 查看文档</a></li>
+				</ul>
+			</nav>
+		</header>
+
 		<main class="container">
-			<header class="container">
-				<nav>
-					<ul class="contrast">
-						<li><strong>BOOKO-DAV</strong></li>
-					</ul>
-					<ul>
-						<li><a href="/dav">使用指南</a></li>
-						<li><a href="/dav/upload">上传</a></li>
-						<li><a href="/dav/list">查看文件</a></li>
-					</ul>
-				</nav>
-			</header>
-
 			<section>
-				<h2>欢迎使用您的个人图书云</h2>
+				<h2><i class="fas fa-info-circle"></i> 欢迎使用您的个人图书云</h2>
 
-				<article>
-					<h3>开始使用</h3>
+				<article class="step">
+					<h3><i class="fas fa-rocket"></i> 开始使用</h3>
 					<ul>
 						<li>📤 <strong>上传图书：</strong> 使用<a href="/dav/upload">上传</a>添加新文档</li>
 						<li>📚 <strong>查看书库：</strong> 在<a href="/dav/list">查看文档</a>浏览已上传文件</li>
@@ -45,46 +37,51 @@
 					</ul>
 				</article>
 
-				<article>
-					<h3>KOReader WebDAV设置</h3>
+				<article class="step">
+					<h3><i class="fas fa-tablet-alt"></i> KOReader WebDAV设置</h3>
 					<ol>
 						<li>在KOReader中，前往<em>设置 → 云存储</em></li>
 						<li>选择<em>WebDAV</em>作为服务类型</li>
 						<li>
 							输入以下详细信息：
 							<ul>
-								<li>🔗 URL: <code>https://[your-worker-subdomain].workers.dev</code></li>
-								<li>👤 用户名: <em>(在Cloudflare变量中设置)</em></li>
-								<li>🔑 密码: <em>(在Cloudflare变量中设置)</em></li>
+								<li><i class="fas fa-link"></i> URL: <code>https://[your-worker-subdomain].workers.dev</code></li>
+								<li><i class="fas fa-user"></i> 用户名: <em>(在Cloudflare变量中设置)</em></li>
+								<li><i class="fas fa-key"></i> 密码: <em>(在Cloudflare变量中设置)</em></li>
 							</ul>
 						</li>
 						<li>保存配置并享受无线传输！</li>
 					</ol>
 				</article>
 
-				<article>
-					<h3>重要链接</h3>
-					<ul>
-						<li><a href="https://dash.cloudflare.com" target="_blank">Cloudflare控制面板</a> - 监控使用情况和设置</li>
-						<li><a href="https://developers.cloudflare.com/r2/pricing/" target="_blank">存储定价</a> - 10GB免费层级详情</li>
-						<li>
-							<a href="https://developers.cloudflare.com/workers/platform/pricing/" target="_blank">请求定价</a> - 每日10万次操作
-						</li>
-					</ul>
+				<article class="important-links">
+					<h3><i class="fas fa-link"></i> 重要链接</h3>
+					<div class="link-item">
+						<a href="https://dash.cloudflare.com" target="_blank"><i class="fas fa-tachometer-alt"></i> Cloudflare控制面板</a>
+						<p>监控使用情况和设置</p>
+					</div>
+					<div class="link-item">
+						<a href="https://developers.cloudflare.com/r2/pricing/" target="_blank"><i class="fas fa-database"></i> 存储定价</a>
+						<p>10GB免费层级详情</p>
+					</div>
+					<div class="link-item">
+						<a href="https://developers.cloudflare.com/workers/platform/pricing/" target="_blank"><i class="fas fa-server"></i> 请求定价</a>
+						<p>每日10万次操作</p>
+					</div>
 				</article>
 
-				<article>
-					<h3>行为和更新</h3>
+				<article class="step">
+					<h3><i class="fas fa-info-circle"></i> 行为和更新</h3>
 					<ul>
-						<li>每个列表调用都会缓存约一周，我假设这个应用的使用不会很频繁。</li>
-						<li>每次上传或删除新文件时，缓存都会被清除，这样可以保持列表的准确性。</li>
-						<li>真实数据源始终是您的Cloudflare控制面板，在R2对象存储下，您还可以在那里查看日志。</li>
+						<li><i class="fas fa-clock"></i> 每个列表调用都会缓存约一周，我假设这个应用的使用不会很频繁。</li>
+						<li><i class="fas fa-sync"></i> 每次上传或删除新文件时，缓存都会被清除，这样可以保持列表的准确性。</li>
+						<li><i class="fas fa-database"></i> 真实数据源始终是您的Cloudflare控制面板，在R2对象存储下，您还可以在那里查看日志。</li>
 						<li>
-							我对此应用的任何更新都可以从GitHub同步到您的应用。我通常会尽力提供
+							<i class="fas fa-code-branch"></i> 我对此应用的任何更新都可以从GitHub同步到您的应用。我通常会尽力提供
 							<a href="https://github.com/Joshuajrodrigues/bookodav/tags" target="_blank">更新日志。</a>
 						</li>
                         <li>
-                            如果您想获取新更新，请点击同步分支，这应该会触发自动部署。
+                            <i class="fas fa-sync-alt"></i> 如果您想获取新更新，请点击同步分支，这应该会触发自动部署。
                         </li>
 					</ul>
 				</article>
@@ -96,7 +93,9 @@
 		</main>
 
 		<script>
-			document.querySelector('#year').textContent = new Date().getFullYear();
+			const yearElement = document.querySelector("#year");
+			const year = new Date().getFullYear();
+			yearElement.innerHTML = year;
 		</script>
 	</body>
 </html>
