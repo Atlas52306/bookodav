@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh">
 
 <head>
   <meta charset="utf-8">
@@ -59,7 +59,7 @@
       background-color: #d4edda;
     }
   </style>
-  <title>BOOKO-DAV - Upload</title>
+  <title>BOOKO-DAV - 上传</title>
 </head>
 
 <body>
@@ -70,20 +70,20 @@
           <li><strong>BOOKO-DAV</strong></li>
         </ul>
         <ul>
-          <li><a href="/dav">Wiki</a></li>
-          <li><a href="/dav/upload">Upload</a></li>
-          <li><a href="/dav/list">View Docs</a></li>
+          <li><a href="/dav">使用指南</a></li>
+          <li><a href="/dav/upload">上传</a></li>
+          <li><a href="/dav/list">查看文档</a></li>
         </ul>
       </nav>
     </header>
     <section>
-      <h2>Upload Files</h2>
+      <h2>上传文件</h2>
       <form id="uploadForm" action="/upload" method="POST" enctype="multipart/form-data">
-        <label for="files">Select files to upload:</label>
+        <label for="files">选择要上传的文件：</label>
         <input type="file" id="files" name="files" required multiple
           accept=".epub,.pdf,.mobi,.cbr,.cbz,.jpg,.jpeg,.png,.gif,.webp">
-        <!-- Use type="button" to prevent native submission -->
-        <button type="submit" id="uploadButton">Upload</button>
+        <!-- 使用type="button"防止原生提交 -->
+        <button type="submit" id="uploadButton">上传</button>
       </form>
       <div id="uploadStatus"></div>
     </section>
@@ -95,7 +95,7 @@
       <a href="https://html5.validator.nu/?doc=https%3A%2F%2Fbookodav.joshuarodrigues.dev">
         <img loading="lazy" class="w3c"
           src="https://github.com/bradleytaunt/html5-valid-badge/blob/master/html5-validator-badge-blue.png?raw=true"
-          alt="HTML5 Valid">
+          alt="HTML5有效">
       </a>
     </footer>
   </main>
@@ -111,11 +111,11 @@
       const uploadButton = document.getElementById('uploadButton');
       const fileInput = document.getElementById('files');
 
-      // Allowed file types from server configuration
+      // 服务器配置中允许的文件类型
       const allowedTypes = ['epub', 'pdf', 'mobi', 'cbr', 'cbz',
         'jpg', 'jpeg', 'png', 'gif', 'webp'];
 
-      // Maximum file size (100MB)
+      // 最大文件大小（100MB）
       const MAX_FILE_SIZE = 100 * 1024 * 1024;
 
       function showError(message) {
@@ -128,30 +128,30 @@
         const seenNames = new Set();
 
         if (files.length === 0) {
-          errors.push('No files selected');
+          errors.push('未选择文件');
           return errors;
         }
 
         for (const file of files) {
-          // File type validation
+          // 文件类型验证
         //  const extension = file.name.split('.').pop().toLowerCase();
          // if (!allowedTypes.includes(extension)) {
-           // errors.push(`Invalid file type: ${file.name} (${extension})`);
+           // errors.push(`无效的文件类型: ${file.name} (${extension})`);
          // }
 
-          // File size validation
+          // 文件大小验证
           if (file.size > MAX_FILE_SIZE) {
-            errors.push(`File too large: ${file.name} (${(file.size / 1024 / 1024).toFixed(1)}MB)`);
+            errors.push(`文件过大: ${file.name} (${(file.size / 1024 / 1024).toFixed(1)}MB)`);
           }
 
-          // Empty file check
+          // 空文件检查
           if (file.size === 0) {
-            errors.push(`Empty file: ${file.name}`);
+            errors.push(`空文件: ${file.name}`);
           }
 
-          // Duplicate names check
+          // 重复名称检查
           if (seenNames.has(file.name)) {
-            errors.push(`Duplicate filename: ${file.name}`);
+            errors.push(`重复的文件名: ${file.name}`);
           }
           seenNames.add(file.name);
         }
@@ -171,9 +171,9 @@
           return;
         }
 
-        // Disable button during upload
+        // 上传期间禁用按钮
         uploadButton.disabled = true;
-        uploadButton.textContent = 'Uploading...';
+        uploadButton.textContent = '上传中...';
 
         const formData = new FormData();
         files.forEach(file => formData.append('files', file));
@@ -186,43 +186,43 @@
 
           const data = await response.json();
 
-          if (!response.ok) throw new Error('Server error');
+          if (!response.ok) throw new Error('服务器错误');
 
-          // Display results with styling
+          // 显示带样式的结果
           const success = data.filter(item => item.status === 'success');
           const failures = data.filter(item => item.status === 'failed');
 
           let resultHtml = `<div class="success" role="status">
-                              <span>Successfully uploaded ${success.length} files:</span>
+                              <span>成功上传 ${success.length} 个文件:</span>
                               <ul>${success.map(f => `<li>${f.sanitizedFilename}</li>`).join('')}</ul>`;
 
           if (failures.length > 0) {
             resultHtml += `<div class="error" role="alert">
-                             <p>Failed to upload ${failures.length} files:</p>
+                             <p>上传失败 ${failures.length} 个文件:</p>
                              <ul>${failures.map(f => `<li>${f.filename}: ${f.error}</li>`).join('')}</ul>
                              </div>`;
           }
 
           uploadStatus.innerHTML = resultHtml;
 
-          // Clear form on success
+          // 成功时清除表单
           if (failures.length === 0) fileInput.value = '';
 
-          // Refresh file list
+          // 刷新文件列表
           await fetch('/dash/list', { headers: { 'Cache-Control': 'no-cache' } });
 
         } catch (error) {
-          showError(`Upload failed: ${error.message}`);
+          showError(`上传失败: ${error.message}`);
         } finally {
           uploadButton.disabled = false;
-          uploadButton.textContent = 'Upload';
+          uploadButton.textContent = '上传';
         }
       });
 
-      // Visual feedback for file selection
+      // 文件选择的视觉反馈
       fileInput.addEventListener('change', function () {
         if (this.files.length > 0) {
-          uploadStatus.innerHTML = `<div class="info">Selected ${this.files.length} files</div>`;
+          uploadStatus.innerHTML = `<div class="info">已选择 ${this.files.length} 个文件</div>`;
         }
       });
     });

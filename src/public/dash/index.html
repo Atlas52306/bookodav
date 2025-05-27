@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh">
 	<head>
 		<meta charset="utf-8" >
 		<meta name="viewport" content="width=device-width, initial-scale=1" >
 		<meta name="color-scheme" content="light dark" >
-		<meta name="description" content="A self-hosted WebDAV server to transfer books between KOReader and other clients." >
+		<meta name="description" content="一个自托管的WebDAV服务器，用于在KOReader和其他客户端之间传输图书。" >
 		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@yohns/picocss@2.2.10/css/pico.min.css" >
 		<style>
 			.footer {
@@ -31,7 +31,7 @@
 				<ul>
 					<li>
 						<small>
-							<a href="/dav">Dashboard</a>
+							<a href="/dav">控制面板</a>
 						</small>
 					</li>
 				</ul>
@@ -39,133 +39,130 @@
 		</header>
 		<main class="container">
 			<article>
-				<h3>What is this?</h3>
+				<h3>这是什么？</h3>
 				<p>
-					Booko-DAV is a play on "books",
-					<a href="https://koreader.rocks/" target="_blank">KOReader</a> and <a href="https://en.wikipedia.org/wiki/WebDAV">WebDAV</a>.
+					Booko-DAV 是"书籍"、
+					<a href="https://koreader.rocks/" target="_blank">KOReader</a> 和 <a href="https://en.wikipedia.org/wiki/WebDAV">WebDAV</a> 的组合词。
 				</p>
 				<p>
-					It is primarily designed to be a WebDAV server to transfer and store books between your PC, phone, and e-reader (in my case a
-					jailbroken Kindle). It is self-hostable and <strong>mostly free</strong> <em>(10GB to be exact)</em>.
-					<a href="#pricing">See Pricing</a>.
+					它主要设计用作WebDAV服务器，用于在PC、手机和电子阅读器（在我的例子中是越狱的Kindle）之间传输和存储书籍。它可以自托管且<strong>基本免费</strong><em>（确切地说是每月10GB）</em>。
+					<a href="#pricing">查看价格</a>。
 				</p>
 			</article>
 
 			<article>
-				<h3>Why is this?</h3>
+				<h3>为什么要做这个？</h3>
 				<p>
-					For fun. There are more WebDAV services out there, but I wanted to create my own version specifically geared towards the ebook
-					community, with easy deployment and low cost.
+					为了乐趣。市面上有很多WebDAV服务，但我想创建自己的版本，专门针对电子书社区，具有易部署和低成本的特点。
 				</p>
 			</article>
 			<article>
-				<h3>How to use this?</h3>
-				<h4>Requirements: A Cloudflare account, a GitHub account, a mobile device or PC, and a credit card.</h4>
+				<h3>如何使用？</h3>
+				<h4>要求：Cloudflare账户、GitHub账户、移动设备或PC，以及信用卡。</h4>
 				<p>
-					<em>* Note: All links below open in new tabs for convenience *</em>
+					<em>* 注意：以下所有链接都会在新标签页中打开，方便使用 *</em>
 				</p>
 				<ol>
 					<li>
-						<h5>Set Up Cloudflare Account</h5>
+						<h5>设置Cloudflare账户</h5>
 						<ul>
 							<li>
-								Go to <a href="https://dash.cloudflare.com/login" target="_blank">Cloudflare Dashboard</a> and create an account (Google
-								Sign-In available). If you have an account, log in.
+								前往 <a href="https://dash.cloudflare.com/login" target="_blank">Cloudflare控制面板</a> 并创建账户（可使用Google登录）。如果已有账户，请登录。
 							</li>
-							<li>In your dashboard sidebar, go to <strong>R2 Object Storage</strong>. Complete billing details and submit.</li>
-							<li>Under R2 Object Storage, click <strong>+ Create Bucket</strong></li>
+							<li>在控制面板侧边栏，前往 <strong>R2对象存储</strong>。完成账单详情并提交。</li>
+							<li>在R2对象存储下，点击 <strong>+ 创建存储桶</strong></li>
 							<li>
-								<strong>Name your bucket <u>bookodav</u></strong> (case-sensitive)
+								<strong>将存储桶命名为 <u>bookodav</u></strong>（区分大小写）
 							</li>
 							<li>
-								<img class="image" src="https://res.cloudinary.com/dt1unishx/image/upload/v1745350922/Screenshot_2025-04-23_000023_jbdwnb.png" alt="bucket example">
+								<img class="image" src="https://res.cloudinary.com/dt1unishx/image/upload/v1745350922/Screenshot_2025-04-23_000023_jbdwnb.png" alt="存储桶示例">
 							</li>
-							<li>Keep default options and create bucket.</li>
-							<li>Go to <a target="_blank" href="https://dash.cloudflare.com/profile/api-tokens">API Tokens</a> via profile menu.</li>
+							<li>保留默认选项并创建存储桶。</li>
+							<li>通过个人资料菜单前往 <a target="_blank" href="https://dash.cloudflare.com/profile/api-tokens">API令牌</a>。</li>
 							<li>
-								Click <strong><u>Create Token</u></strong> and select <strong>Edit Cloudflare Workers</strong> template.
+								点击 <strong><u>创建令牌</u></strong> 并选择 <strong>编辑Cloudflare Workers</strong> 模板。
 							</li>
-							<li>Select your account in dropdown under Account Resources and All Zones under Zone Resources.</li>
+							<li>在账户资源下拉菜单中选择您的账户，在区域资源下选择所有区域。</li>
 							<li>
-								<img class="image" src="https://res.cloudinary.com/dt1unishx/image/upload/v1745350938/Screenshot_2025-04-23_000214_mq4jzd.png" alt="token example">
+								<img class="image" src="https://res.cloudinary.com/dt1unishx/image/upload/v1745350938/Screenshot_2025-04-23_000214_mq4jzd.png" alt="令牌示例">
 							</li>
-							<li>Create token and save it. Save your Account ID from dashboard URL (https://dash.cloudflare.com/{AccountId}/home).</li>
+							<li>创建令牌并保存。从控制面板URL保存您的账户ID (https://dash.cloudflare.com/{AccountId}/home)。</li>
 						</ul>
 					</li>
 					<li>
-						<h5>GitHub Account</h5>
+						<h5>GitHub账户</h5>
 						<ul>
-							<li>Create/login to <a target="_blank" href="https://github.com/">GitHub</a></li>
-							<li>Visit <a target="_blank" href="https://github.com/Joshuajrodrigues/bookodav">repository</a></li>
-							<li>Fork it by clicking this</li>
+							<li>创建/登录到 <a target="_blank" href="https://github.com/">GitHub</a></li>
+							<li>访问 <a target="_blank" href="https://github.com/Joshuajrodrigues/bookodav">仓库</a></li>
+							<li>通过点击此处复刻它</li>
 							<li>
-								<img class="image" src="https://res.cloudinary.com/dt1unishx/image/upload/v1745350980/Screenshot_2025-04-23_003503_enhe6n.png" alt="fork">
+								<img class="image" src="https://res.cloudinary.com/dt1unishx/image/upload/v1745350980/Screenshot_2025-04-23_003503_enhe6n.png" alt="复刻">
 							</li>
-							<li>Go to settings =&gt; secrets &amp; variables =&gt; actions</li>
-							<li>Click on new repository secret</li>
+							<li>前往设置 =&gt; 密钥和变量 =&gt; 操作</li>
+							<li>点击新建仓库密钥</li>
 							<li>
-								<img class="image" src="https://res.cloudinary.com/dt1unishx/image/upload/v1745350950/Screenshot_2025-04-23_002507_hw0ugn.png" alt="secret">
+								<img class="image" src="https://res.cloudinary.com/dt1unishx/image/upload/v1745350950/Screenshot_2025-04-23_002507_hw0ugn.png" alt="密钥">
 							</li>
-							<li>add name as CF_API_TOKEN</li>
-							<li>in the Secret * section paste in the api key you created earlier, click Add Secret</li>
-							<li>go to actions and enable workflows</li>
+							<li>添加名称为CF_API_TOKEN</li>
+							<li>在密钥*部分粘贴您之前创建的API密钥，点击添加密钥</li>
+							<li>前往操作并启用工作流</li>
 							<li>
-								<img class="image" src="https://res.cloudinary.com/dt1unishx/image/upload/v1745350953/Screenshot_2025-04-23_002632_zuevrs.png" alt="actions">
-							</li>
-							<li>
-								go to deploy and click run wrokflows
+								<img class="image" src="https://res.cloudinary.com/dt1unishx/image/upload/v1745350953/Screenshot_2025-04-23_002632_zuevrs.png" alt="操作">
 							</li>
 							<li>
-								<img class="image" src="https://res.cloudinary.com/dt1unishx/image/upload/v1745350959/Screenshot_2025-04-23_002655_c98byf.png" alt="workflow">
+								前往部署并点击运行工作流
 							</li>
 							<li>
-								if you click on actions again you should see this
+								<img class="image" src="https://res.cloudinary.com/dt1unishx/image/upload/v1745350959/Screenshot_2025-04-23_002655_c98byf.png" alt="工作流">
 							</li>
-							<li><img class="image" src="https://res.cloudinary.com/dt1unishx/image/upload/v1745350957/Screenshot_2025-04-23_002741_ssiydj.png" alt="workflow done"></li>
+							<li>
+								如果再次点击操作，您应该会看到这个
+							</li>
+							<li><img class="image" src="https://res.cloudinary.com/dt1unishx/image/upload/v1745350957/Screenshot_2025-04-23_002741_ssiydj.png" alt="工作流完成"></li>
 						</ul>
 					</li>
 					<li>
-						<h5>Access</h5>
+						<h5>访问</h5>
 						<ul>
-							<li>In Cloudflare Dashboard, go to Compute → Workers → <b>bookodav-worker</b>.</li>
+							<li>在Cloudflare控制面板中，前往计算 → Workers → <b>bookodav-worker</b>。</li>
 							<li>
-								<img class="image" src="https://res.cloudinary.com/dt1unishx/image/upload/v1745350965/Screenshot_2025-04-23_002806_hww0vf.png" alt="acess">
+								<img class="image" src="https://res.cloudinary.com/dt1unishx/image/upload/v1745350965/Screenshot_2025-04-23_002806_hww0vf.png" alt="访问">
 							</li>
-							<li>Under Settings → Variables, Select Type as SECRET, add USERNAME and PASSWORD (case-sensitive) and deploy.</li>
+							<li>在设置 → 变量下，选择类型为SECRET，添加USERNAME和PASSWORD（区分大小写）并部署。</li>
 							<li>
-								<img class="image" src="https://res.cloudinary.com/dt1unishx/image/upload/v1745350990/Screenshot_2025-04-23_004933_nyxilz.png" alt="username">
+								<img class="image" src="https://res.cloudinary.com/dt1unishx/image/upload/v1745350990/Screenshot_2025-04-23_004933_nyxilz.png" alt="用户名">
 							</li>
 							<li>
-								<img class="image" src="https://res.cloudinary.com/dt1unishx/image/upload/v1745350991/Screenshot_2025-04-23_004847_msorqy.png" alt="password">
+								<img class="image" src="https://res.cloudinary.com/dt1unishx/image/upload/v1745350991/Screenshot_2025-04-23_004847_msorqy.png" alt="密码">
 							</li>
-							<li>Find your access URL at workers.dev domain (e.g., bookodav-worker.username.workers.dev/dav).</li>
+							<li>在workers.dev域名找到您的访问URL（例如，bookodav-worker.username.workers.dev/dav）。</li>
 							<li>
-								<img class="image" src="https://res.cloudinary.com/dt1unishx/image/upload/v1745350977/Screenshot_2025-04-23_002855_squ7f8.png" alt="acess">
+								<img class="image" src="https://res.cloudinary.com/dt1unishx/image/upload/v1745350977/Screenshot_2025-04-23_002855_squ7f8.png" alt="访问">
 							</li>
 						</ul>
 					</li>
 				</ol>
 			</article>
 			<article>
-				<h3>Important Links</h3>
+				<h3>重要链接</h3>
 				<ol>
 					<li>
-						<a target="_blank" href="http://dash.cloudflare.com">Cloudflare Dashboard</a>
-						<p>Monitor storage, requests, and billing. Preferred over built-in docs table.</p>
+						<a target="_blank" href="http://dash.cloudflare.com">Cloudflare控制面板</a>
+						<p>监控存储、请求和账单。比内置文档表格更好用。</p>
 					</li>
 					<li id="pricing">
-						<a target="_blank" href="https://developers.cloudflare.com/r2/pricing/">Cloudflare R2 Pricing</a>
-						<p>10GB free storage. Heavy caching reduces bills but may cause minor inconsistencies.</p>
+						<a target="_blank" href="https://developers.cloudflare.com/r2/pricing/">Cloudflare R2定价</a>
+						<p>10GB免费存储。大量缓存可减少账单，但可能导致轻微的不一致。</p>
 					</li>
 					<li>
-						<a target="_blank" href="https://developers.cloudflare.com/workers/platform/pricing/">Cloudflare Workers Pricing</a>
-						<p>100,000 daily requests included (uploads, downloads, deletes).</p>
+						<a target="_blank" href="https://developers.cloudflare.com/workers/platform/pricing/">Cloudflare Workers定价</a>
+						<p>每日包含100,000次请求（上传、下载、删除）。</p>
 					</li>
 					<li>
 						<p>
-							Booko-DAV uses Cloudflare Workers technology.
+							Booko-DAV使用Cloudflare Workers技术。
 							<a target="_blank" href="https://developers.cloudflare.com/workers/reference/how-workers-works/">
-								Learn more about Workers.
+								了解更多关于Workers的信息。
 							</a>
 						</p>
 					</li>
@@ -178,8 +175,8 @@
 					<img
 						loading="lazy"
 						class="w3c"
-						src="https://github.com/bradleytaunt/html5-valid-badge/blob/master/html5-validator-badge-blue.png?raw=true"
-						alt="HTML5 Valid"
+						src="https://github.com/bradleytaunt/html5-validator-badge/blob/master/html5-validator-badge-blue.png?raw=true"
+						alt="HTML5有效"
 					>
 				</a>
 			</footer>

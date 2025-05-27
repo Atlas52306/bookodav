@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh">
 
 <head>
     <meta charset="utf-8">
@@ -24,7 +24,7 @@
           width: 64px;
         }
       </style>
-    <title>BOOKO-DAV - List</title>
+    <title>BOOKO-DAV - 文件列表</title>
 </head>
 
 <body>
@@ -35,30 +35,30 @@
                     <li><strong>BOOKO-DAV</strong></li>
                 </ul>
                 <ul>
-                    <li><a href="/dav">Wiki</a></li>
-                    <li><a href="/dav/upload">Upload</a></li>
-                    <li><a href="/dav/list">View Docs</a></li>
+                    <li><a href="/dav">使用指南</a></li>
+                    <li><a href="/dav/upload">上传</a></li>
+                    <li><a href="/dav/list">查看文档</a></li>
                 </ul>
             </nav>
         </header>
         <section>
-            <h2>File List</h2>
+            <h2>文件列表</h2>
             <div class="dump-cache" >
-                <button class="outline" type="button" onclick="dumpCache()" >Dump cache</button>
+                <button class="outline" type="button" onclick="dumpCache()" >清除缓存</button>
             </div>
             <div class="overflow-auto">
                 <table>
                     <thead>
                         <tr>
-                            <th scope="row">File Name</th>
-                            <th scope="row">Size</th>
-                            <th scope="row">Last Modified</th>
-                            <th scope="row">Download</th>
-                            <th scope="row">Delete</th>
+                            <th scope="row">文件名</th>
+                            <th scope="row">大小</th>
+                            <th scope="row">最后修改</th>
+                            <th scope="row">下载</th>
+                            <th scope="row">删除</th>
                         </tr>
                     </thead>
                     <tbody id="fileList">
-                        <!-- Files will be dynamically inserted here -->
+                        <!-- 文件将动态插入此处 -->
                     </tbody>
                 </table>
             </div>
@@ -66,30 +66,30 @@
         <footer></footer>
 
         <script>
-            // Fetch and display the file list
+            // 获取并显示文件列表
             async function loadFileList() {
                 try {
-                    const response = await fetch('/', { method: 'PROPFIND' }); // Replace with your endpoint
+                    const response = await fetch('/', { method: 'PROPFIND' }); // 替换为您的端点
                     const data = await response.text();
 
-                    // Parse the XML response
+                    // 解析XML响应
                     const parser = new DOMParser();
                     const xmlDoc = parser.parseFromString(data, "application/xml");
 
-                    // Extract file details
-                    const files = xmlDoc.querySelectorAll('D\\:response, response'); // Handle both "D:" and no namespace
+                    // 提取文件详情
+                    const files = xmlDoc.querySelectorAll('D\\:response, response'); // 处理"D:"和无命名空间
                     const fileList = document.getElementById('fileList');
-                    fileList.innerHTML = ''; // Clear existing content
+                    fileList.innerHTML = ''; // 清除现有内容
 
                     files.forEach(file => {
                         const href = file.querySelector('D\\:href, href').textContent;
                         const size = file.querySelector('D\\:getcontentlength, getcontentlength')?.textContent || 'N/A';
                         const lastModified = file.querySelector('D\\:getlastmodified, getlastmodified')?.textContent || 'N/A';
 
-                        // Skip the root directory entry
+                        // 跳过根目录条目
                         if (href === '/') return;
 
-                        // Create a table row for each file
+                        // 为每个文件创建表格行
                         const row = document.createElement('tr');
                         console.log("hrefhrefhrefhrefhrefhrefhrefhref",href);
                         
@@ -97,61 +97,61 @@
                             <td>${decodeURIComponent(href.split('/').pop())}</td>
                             <td>${formatBytes(size)}</td>
                             <td>${new Date(lastModified).toLocaleString()}</td>
-                            <td><a href="${href}" download>Download</a></td>
-                            <td><button onclick="deleteFile('${href}')">Delete</button></td>
+                            <td><a href="${href}" download>下载</a></td>
+                            <td><button onclick="deleteFile('${href}')">删除</button></td>
                         `;
                         fileList.appendChild(row);
                     });
                 } catch (error) {
-                    console.error('Error loading file list:', error);
-                    document.getElementById('fileList').innerHTML = `<tr><td colspan="5">Failed to load file list.</td></tr>`;
+                    console.error('加载文件列表时出错:', error);
+                    document.getElementById('fileList').innerHTML = `<tr><td colspan="5">无法加载文件列表。</td></tr>`;
                 }
             }
 
-            // Helper function to format file sizes
+            // 辅助函数，用于格式化文件大小
             function formatBytes(bytes) {
                 if (bytes === 'N/A') return 'N/A';
                 bytes = parseInt(bytes);
-                if (bytes === 0) return '0 Bytes';
+                if (bytes === 0) return '0 字节';
                 const k = 1024;
-                const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+                const sizes = ['字节', 'KB', 'MB', 'GB', 'TB'];
                 const i = Math.floor(Math.log(bytes) / Math.log(k));
                 return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
             }
 
             async function dumpCache(){
-                if (confirm('Are you sure you want to delete cache?')) {
+                if (confirm('确定要删除缓存吗？')) {
                     try {
                         const response = await fetch('/dumpcache', { method: 'GET' });
                         if (response.ok) {
-                            alert('cache deleted successfully!');
-                            loadFileList(); // Refresh the file list
+                            alert('缓存已成功删除！');
+                            loadFileList(); // 刷新文件列表
                         } else {
-                            alert('Failed to delete cache: ' + response.statusText);
+                            alert('删除缓存失败: ' + response.statusText);
                         }
                     } catch (error) {
-                        alert('Error deleting cache: ' + error.message);
+                        alert('删除缓存时出错: ' + error.message);
                     }
                 }
             }
-            // Delete a file
+            // 删除文件
             async function deleteFile(filePath) {
-                if (confirm('Are you sure you want to delete this file?')) {
+                if (confirm('确定要删除此文件吗？')) {
                     try {
                         const response = await fetch(filePath, { method: 'DELETE' });
                         if (response.ok) {
-                            alert('File deleted successfully!');
-                            loadFileList(); // Refresh the file list
+                            alert('文件已成功删除！');
+                            loadFileList(); // 刷新文件列表
                         } else {
-                            alert('Failed to delete file: ' + response.statusText);
+                            alert('删除文件失败: ' + response.statusText);
                         }
                     } catch (error) {
-                        alert('Error deleting file: ' + error.message);
+                        alert('删除文件时出错: ' + error.message);
                     }
                 }
             }
 
-            // Load the file list when the page loads
+            // 页面加载时加载文件列表
             window.onload = loadFileList;
         </script>
         <footer class="footer">
@@ -162,7 +162,7 @@
             <a href="https://html5.validator.nu/?doc=https%3A%2F%2Fbookodav.joshuarodrigues.dev">
                 <img loading="lazy" class="w3c"
                     src="https://github.com/bradleytaunt/html5-valid-badge/blob/master/html5-validator-badge-blue.png?raw=true"
-                    alt="HTML5 Valid">
+                    alt="HTML5有效">
             </a>
         </footer>
     </main>
