@@ -270,24 +270,28 @@
 
         for (const file of files) {
           // 文件类型验证
-        //  const extension = file.name.split('.').pop().toLowerCase();
-         // if (!allowedTypes.includes(extension)) {
-           // errors.push(`无效的文件类型: ${file.name} (${extension})`);
-         // }
+          const extension = file.name.split('.').pop().toLowerCase();
+          if (!allowedTypes.includes(extension)) {
+            errors.push(`无效的文件类型: ${file.name} (${extension})`);
+            continue;
+          }
 
           // 文件大小验证
           if (file.size > MAX_FILE_SIZE) {
             errors.push(`文件过大: ${file.name} (${(file.size / 1024 / 1024).toFixed(1)}MB)`);
+            continue;
           }
 
           // 空文件检查
           if (file.size === 0) {
             errors.push(`空文件: ${file.name}`);
+            continue;
           }
 
           // 重复名称检查
           if (seenNames.has(file.name)) {
             errors.push(`重复的文件名: ${file.name}`);
+            continue;
           }
           seenNames.add(file.name);
         }
@@ -295,6 +299,7 @@
         return errors;
       }
 
+      // 添加上传事件处理器
       uploadButton.addEventListener('click', async function (e) {
         e.preventDefault();
         uploadStatus.innerHTML = '';
@@ -329,14 +334,15 @@
           const failures = data.filter(item => item.status === 'failed');
 
           let resultHtml = `<div class="success" role="status">
-                              <span><i class="fas fa-check-circle"></i> 成功上传 ${success.length} 个文件:</span>
-                              <ul>${success.map(f => `<li>${f.sanitizedFilename}</li>`).join('')}</ul>`;
+                            <span><i class="fas fa-check-circle"></i> 成功上传 ${success.length} 个文件:</span>
+                            <ul>${success.map(f => `<li>${f.sanitizedFilename}</li>`).join('')}</ul>
+                          </div>`;
 
           if (failures.length > 0) {
             resultHtml += `<div class="error" role="alert">
-                             <p><i class="fas fa-exclamation-triangle"></i> 上传失败 ${failures.length} 个文件:</p>
-                             <ul>${failures.map(f => `<li>${f.filename}: ${f.error}</li>`).join('')}</ul>
-                             </div>`;
+                            <p><i class="fas fa-exclamation-triangle"></i> 上传失败 ${failures.length} 个文件:</p>
+                            <ul>${failures.map(f => `<li>${f.filename}: ${f.error}</li>`).join('')}</ul>
+                          </div>`;
           }
 
           uploadStatus.innerHTML = resultHtml;
