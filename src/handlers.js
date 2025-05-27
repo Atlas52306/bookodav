@@ -7,7 +7,7 @@ export async function handleDeleteFile(request, env, ctx) {
     const sanitizedPath = sanitizePath(filePath);
     
     if (!sanitizedPath) {
-        return new Response("Invalid path", { status: 400 });
+        return new Response("文件路径无效，请检查文件名是否包含不支持的特殊字符", { status: 400 });
     }
     
     try {
@@ -24,10 +24,10 @@ export async function handleDeleteFile(request, env, ctx) {
         const cacheKey = new Request(listingUrl, { cf: { cacheTtl: 604800 } });
         ctx.waitUntil(cache.delete(cacheKey));
 
-        return new Response('File deleted successfully', { status: 200 });
+        return new Response('文件删除成功', { status: 200 });
     } catch (error) {
         console.error("Delete error:", error.name);
-        return new Response('Failed to delete file', { status: 500 });
+        return new Response('文件删除失败，请稍后重试', { status: 500 });
     }
 }
 
@@ -47,13 +47,13 @@ export async function handleMultpleUploads(request, env, ctx) {
                 // 安全检查
                 const sanitizedFilename = sanitizePath(filename);
                 if (!sanitizedFilename) {
-                    results.push({ filename, status: "failed", error: "Invalid filename" });
+                    results.push({ filename, status: "failed", error: "文件名包含不支持的特殊字符" });
                     continue;
                 }
                 
                 // 验证文件内容
                 if (!validateFileContent(extension, data)) {
-                    results.push({ filename, status: "failed", error: "Invalid file content" });
+                    results.push({ filename, status: "failed", error: "文件内容与扩展名不匹配" });
                     continue;
                 }
                 
@@ -66,7 +66,7 @@ export async function handleMultpleUploads(request, env, ctx) {
                     ctx.waitUntil(cache.delete(cacheKey));
                 } catch (error) {
                     console.error("Upload error:", error.name);
-                    results.push({ filename, status: "failed", error: "Storage error" });
+                    results.push({ filename, status: "failed", error: "存储服务错误，请稍后重试" });
                 }
             }
         }
@@ -76,7 +76,7 @@ export async function handleMultpleUploads(request, env, ctx) {
         });
     } catch (error) {
         console.error("Form processing error:", error.name);
-        return new Response(JSON.stringify({ error: "Failed to process upload" }), { 
+        return new Response(JSON.stringify({ error: "处理上传请求失败，请检查文件格式和大小" }), { 
             status: 500,
             headers: { ...corsHeaders, "Content-Type": "application/json" }
         });
@@ -102,13 +102,13 @@ export async function handleGetFile(request, env) {
         
         const sanitizedFilename = sanitizePath(filename);
         if (!sanitizedFilename) {
-            return new Response("Invalid path", { status: 400, headers: corsHeaders });
+            return new Response("文件路径无效，请检查文件名是否包含不支持的特殊字符", { status: 400, headers: corsHeaders });
         }
         
         const file = await env.MY_BUCKET.get(sanitizedFilename);
 
         if (file === null) {
-            return new Response("File not found", { status: 404, headers: corsHeaders });
+            return new Response("文件不存在或已被删除", { status: 404, headers: corsHeaders });
         }
 
         const extension = sanitizedFilename.split(".").pop().toLowerCase();
@@ -123,7 +123,7 @@ export async function handleGetFile(request, env) {
         });
     } catch (error) {
         console.error("Get file error:", error.name);
-        return new Response("Failed to retrieve file", { status: 500, headers: corsHeaders });
+        return new Response("获取文件失败，请稍后重试", { status: 500, headers: corsHeaders });
     }
 }
 
@@ -134,7 +134,7 @@ export async function handlePutFile(request, env, ctx) {
 
         const sanitizedPath = sanitizePath(filePath);
         if (!sanitizedPath) {
-            return new Response("Invalid path", { status: 400 });
+            return new Response("文件路径无效，请检查文件名是否包含不支持的特殊字符", { status: 400 });
         }
 
         // Read the file data from the request body
@@ -144,7 +144,7 @@ export async function handlePutFile(request, env, ctx) {
         
         // 验证文件内容
         if (!validateFileContent(extension, data)) {
-            return new Response("Invalid file content", { status: 400 });
+            return new Response("文件内容与扩展名不匹配", { status: 400 });
         }
 
         // Upload the file to R2 with the given filePath as the key
@@ -156,10 +156,10 @@ export async function handlePutFile(request, env, ctx) {
         const cacheKey = new Request(listingUrl);
         ctx.waitUntil(cache.delete(cacheKey));
 
-        return new Response("File uploaded successfully", { status: 200 });
+        return new Response("文件上传成功", { status: 200 });
     } catch (error) {
         console.error("Upload error:", error.name);
-        return new Response("Failed to upload file", { status: 500 });
+        return new Response("文件上传失败，请稍后重试", { status: 500 });
     }
 }
 
@@ -171,7 +171,7 @@ export async function handleFileList(request, env, ctx) {
         
         // 安全检查
         if (prefix && !sanitizePath(prefix)) {
-            return new Response("Invalid path", { status: 400, headers: corsHeaders });
+            return new Response("目录路径无效，请检查是否包含不支持的特殊字符", { status: 400, headers: corsHeaders });
         }
 
         const bypassCache = true; // 始终绕过缓存以确保最新列表
@@ -231,7 +231,7 @@ export async function handleFileList(request, env, ctx) {
         return response;
     } catch (error) {
         console.error("File list error:", error.name);
-        return new Response("Failed to list files", { status: 500, headers: corsHeaders });
+        return new Response("获取文件列表失败，请稍后重试", { status: 500, headers: corsHeaders });
     }
 }
 
@@ -242,9 +242,9 @@ export async function dumpCache(request, env, ctx) {
         const cache = caches.default;
         const cacheKey = new Request(listingUrl, { cf: { cacheTtl: 604800 } });
         ctx.waitUntil(cache.delete(cacheKey));
-        return new Response('Cache deleted successfully', { status: 200 });
+        return new Response('缓存已成功刷新', { status: 200 });
     } catch (error) {
         console.error("Cache dump error:", error.name);
-        return new Response('Failed to delete cache', { status: 500 });
+        return new Response('刷新缓存失败，请稍后重试', { status: 500 });
     }
 }
