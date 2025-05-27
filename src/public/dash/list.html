@@ -272,6 +272,43 @@
             padding: 0.25rem 0.6rem;
             font-size: 0.8rem;
         }
+
+        td button, td a {
+            padding: 0.25rem;
+            font-size: 1rem;
+            min-width: auto;
+        }
+
+        td button span, td a span {
+            display: none;
+        }
+
+        td button i, td a i {
+            margin: 0;
+        }
+    }
+
+    td button, td a {
+        background-color: var(--primary-color);
+        border: none;
+        color: var(--text-light);
+        transition: all var(--transition-speed) ease;
+        border-radius: var(--border-radius);
+        padding: 0.4rem 1rem;
+        font-weight: 500;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.3rem;
+        box-shadow: var(--card-shadow);
+        font-size: 0.9rem;
+        cursor: pointer;
+        text-decoration: none;
+    }
+
+    td button:hover, td a:hover {
+        background-color: var(--primary-hover);
+        transform: translateY(-1px);
+        box-shadow: var(--card-shadow-hover);
     }
     </style>
     <title>BOOKO-DAV - 文件列表</title>
@@ -369,8 +406,8 @@
                         <td>${decodeURIComponent(href.split('/').pop())}</td>
                         <td>${formatBytes(size)}</td>
                         <td>${new Date(lastModified).toLocaleString()}</td>
-                        <td><a href="${href}" download><i class="fas fa-download"></i> 下载</a></td>
-                        <td><button onclick="deleteFile('${href}')"><i class="fas fa-trash"></i> 删除</button></td>
+                        <td><a href="${href}" download><i class="fas fa-download"></i> <span>下载</span></a></td>
+                        <td><button onclick="deleteFile('${href}')"><i class="fas fa-trash"></i> <span>删除</span></button></td>
                     `;
                     fileList.appendChild(row);
                 });
