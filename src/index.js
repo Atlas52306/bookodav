@@ -38,6 +38,21 @@ export default {
 		const url = new URL(request.url);
 		let path = url.pathname;
 
+		// 处理静态资源
+		if (request.method === "GET" && (path === "/" || path.startsWith("/dav"))) {
+			const content = handleUiRouting(path);
+			const contentType = path.endsWith('.css') ? 'text/css; charset=utf-8' : 'text/html; charset=utf-8';
+			
+			// 添加 CORS 头，允许样式文件被跨域访问
+			const headers = {
+				"Content-Type": contentType,
+				"Cache-Control": "public, max-age=604800",
+				"Access-Control-Allow-Origin": "*",
+			};
+			
+			return new Response(content, { headers });
+		}
+
 		if (request.method === "GET" && path === "/favicon.ico") {
 			// Fetch favicon from R2 bucket
 			const favicon = './favicon.ico'
@@ -51,17 +66,6 @@ export default {
 					"Content-Type": "image/x-icon",
 					"Cache-Control": "public, max-age=604800" // 1 week
 				}
-			});
-		}
-
-		if (request.method === "GET" && (path === "/" || path.startsWith("/dav"))) {
-			const content = handleUiRouting(path);
-			const contentType = path.endsWith('.css') ? 'text/css' : 'text/html';
-			return new Response(content, {
-				headers: {
-					"Content-Type": contentType,
-					"Cache-Control": "public, max-age=604800"
-				},
 			});
 		}
 
