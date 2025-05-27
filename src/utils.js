@@ -63,10 +63,13 @@ export function sanitizePath(path) {
 	if (path.includes("..") || path.includes("./") || path.includes("/.")) {
 		return null;
 	}
-	// 只允许安全字符
-	if (!/^[a-zA-Z0-9_\-\/. ]+$/.test(path)) {
+	
+	// 允许更广泛的字符集，包括中文、日文、韩文等Unicode字符，以及常见符号
+	// 只禁止危险字符如 < > : " | ? * 和控制字符
+	if (/[<>:"|?*\x00-\x1F]/.test(path)) {
 		return null;
 	}
+	
 	return path;
 }
 

@@ -348,7 +348,7 @@
         <section>
             <h2><i class="fas fa-file-alt"></i> 文件列表</h2>
             <div class="dump-cache">
-                <button class="outline" type="button" onclick="dumpCache()"><i class="fas fa-trash"></i> 清除缓存</button>
+                <button class="outline" type="button" onclick="dumpCache()"><i class="fas fa-sync"></i> 刷新文件列表</button>
             </div>
             <div class="overflow-auto">
                 <table>
@@ -414,11 +414,11 @@
 
                 // 如果没有文件，显示提示
                 if (fileList.children.length === 0) {
-                    fileList.innerHTML = `<tr><td colspan="5" style="text-align: center;">无法加载文件列表或当前没有文件。</td></tr>`;
+                    fileList.innerHTML = `<tr><td colspan="5" style="text-align: center;"><i class="fas fa-info-circle"></i> 当前没有文件。您可以通过<a href="/dav/upload">上传页面</a>添加文件。</td></tr>`;
                 }
             } catch (error) {
                 console.error('加载文件列表时出错:', error);
-                document.getElementById('fileList').innerHTML = `<tr><td colspan="5" style="text-align: center;">无法加载文件列表。</td></tr>`;
+                document.getElementById('fileList').innerHTML = `<tr><td colspan="5" style="text-align: center;"><i class="fas fa-exclamation-circle"></i> 无法加载文件列表。请<a href="#" onclick="loadFileList(); return false;">重试</a>或检查网络连接。</td></tr>`;
             }
         }
 
@@ -434,33 +434,34 @@
         }
 
         async function dumpCache() {
-            if (confirm('确定要删除缓存吗？')) {
+            if (confirm('确定要刷新文件列表缓存吗？这将显示最新的文件状态。')) {
                 try {
                     const response = await fetch('/dumpcache', { method: 'GET' });
                     if (response.ok) {
-                        alert('缓存已成功删除！');
+                        alert('文件列表已刷新！');
                         loadFileList(); // 刷新文件列表
                     } else {
-                        alert('删除缓存失败: ' + response.statusText);
+                        alert('刷新失败: ' + response.statusText + '\n请稍后重试。');
                     }
                 } catch (error) {
-                    alert('删除缓存时出错: ' + error.message);
+                    alert('刷新失败: ' + error.message + '\n请检查您的网络连接。');
                 }
             }
         }
         // 删除文件
         async function deleteFile(filePath) {
-            if (confirm('确定要删除此文件吗？')) {
+            const fileName = decodeURIComponent(filePath.split('/').pop());
+            if (confirm(`确定要删除文件 "${fileName}" 吗？\n此操作无法撤销。`)) {
                 try {
                     const response = await fetch(filePath, { method: 'DELETE' });
                     if (response.ok) {
-                        alert('文件已成功删除！');
+                        alert(`文件 "${fileName}" 已成功删除！`);
                         loadFileList(); // 刷新文件列表
                     } else {
-                        alert('删除文件失败: ' + response.statusText);
+                        alert(`删除文件失败: ${response.statusText}\n请稍后重试。`);
                     }
                 } catch (error) {
-                    alert('删除文件时出错: ' + error.message);
+                    alert(`删除文件时出错: ${error.message}\n请检查您的网络连接。`);
                 }
             }
         }

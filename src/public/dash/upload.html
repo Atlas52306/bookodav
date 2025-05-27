@@ -491,19 +491,19 @@
           <div class="upload-form">
             <div class="file-input-wrapper">
               <div class="custom-file-input">
-          <input type="file" id="files" name="files" required multiple
+                <input type="file" id="files" name="files" required multiple
                   accept=".epub,.pdf,.mobi,.cbr,.cbz,.jpg,.jpeg,.png,.gif,.webp,.txt">
                 <label for="files" class="file-input-trigger" id="fileInputLabel">
                   <i class="fas fa-file-upload"></i>
-                  <span class="placeholder">选择要上传的文件</span>
+                  <span class="placeholder">点击此处选择要上传的文件</span>
                 </label>
-                <span class="file-types">支持 epub、pdf、mobi、cbr、cbz、jpg、jpeg、png、gif、webp、txt</span>
+                <span class="file-types">支持格式：电子书(epub、pdf、mobi)、漫画(cbr、cbz)、图片(jpg、jpeg、png、gif、webp)、文本(txt)</span>
               </div>
             </div>
             <div class="upload-actions">
               <button type="submit" id="uploadButton" class="upload-button">
                 <i class="fas fa-cloud-upload-alt"></i>
-                <span>上传</span>
+                <span>开始上传</span>
               </button>
             </div>
           </div>
@@ -539,7 +539,7 @@
       const MAX_FILE_SIZE = 100 * 1024 * 1024;
 
       function showError(message) {
-        uploadStatus.innerHTML = `<div class="error" role="alert">${message}</div>`;
+        uploadStatus.innerHTML = `<div class="error" role="alert"><i class="fas fa-exclamation-circle"></i> <strong>上传失败</strong><br>${message}</div>`;
         uploadStatus.scrollIntoView({ behavior: 'smooth' });
       }
 
@@ -548,7 +548,7 @@
         const seenNames = new Set();
 
         if (files.length === 0) {
-          errors.push('未选择文件');
+          errors.push('请选择至少一个文件');
           return errors;
         }
 
@@ -556,19 +556,19 @@
           // 文件类型验证
           const extension = file.name.split('.').pop().toLowerCase();
           if (!allowedTypes.includes(extension)) {
-            errors.push(`无效的文件类型: ${file.name} (${extension})`);
+            errors.push(`文件格式不支持: ${file.name} (${extension})`);
             continue;
           }
 
           // 文件大小验证
           if (file.size > MAX_FILE_SIZE) {
-            errors.push(`文件过大: ${file.name} (${(file.size / 1024 / 1024).toFixed(1)}MB)`);
+            errors.push(`文件过大 (最大100MB): ${file.name} (${(file.size / 1024 / 1024).toFixed(1)}MB)`);
             continue;
           }
 
           // 空文件检查
           if (file.size === 0) {
-            errors.push(`空文件: ${file.name}`);
+            errors.push(`文件为空: ${file.name}`);
             continue;
           }
 
@@ -618,13 +618,13 @@
           const failures = data.filter(item => item.status === 'failed');
 
           let resultHtml = `<div class="success" role="status">
-                              <span><i class="fas fa-check-circle"></i> 成功上传 ${success.length} 个文件:</span>
+                              <span><i class="fas fa-check-circle"></i> <strong>上传成功</strong> - ${success.length} 个文件已上传:</span>
                             <ul>${success.map(f => `<li>${f.sanitizedFilename}</li>`).join('')}</ul>
                           </div>`;
 
           if (failures.length > 0) {
             resultHtml += `<div class="error" role="alert">
-                             <p><i class="fas fa-exclamation-triangle"></i> 上传失败 ${failures.length} 个文件:</p>
+                             <p><i class="fas fa-exclamation-triangle"></i> <strong>上传失败</strong> - ${failures.length} 个文件未能上传:</p>
                              <ul>${failures.map(f => `<li>${f.filename}: ${f.error}</li>`).join('')}</ul>
                              </div>`;
           }
@@ -652,10 +652,10 @@
         
         if (this.files.length > 0) {
           label.classList.add('has-files');
-          placeholder.textContent = `已选择 ${this.files.length} 个文件`;
+          placeholder.textContent = `已选择 ${this.files.length} 个文件 (点击更改)`;
         } else {
           label.classList.remove('has-files');
-          placeholder.textContent = '选择要上传的文件';
+          placeholder.textContent = '点击此处选择要上传的文件';
         }
       });
     });
