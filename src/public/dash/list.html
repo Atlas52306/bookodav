@@ -11,81 +11,103 @@
     :root {
         --primary-color: #4361ee;
         --primary-hover: #3b4fd3;
-        --secondary-color: #3a0ca3;
-        --accent-color: #f72585;
-        --success-color: #4cc9f0;
-        --warning-color: #ffd166;
-        --error-color: #ef476f;
-        --background-light: #f8f9fa;
-        --background-dark: #212529;
-        --text-light: #f8f9fa;
-        --text-dark: #212529;
-        --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
-        --card-shadow-hover: 0 10px 15px rgba(0, 0, 0, 0.1);
-        --border-radius: 12px;
-        --transition-speed: 0.3s;
+        --primary-bg: rgba(67, 97, 238, 0.1);
+        --primary-bg-hover: rgba(67, 97, 238, 0.15);
+        --text-color: #2d3748;
+        --text-light: #ffffff;
+        --text-muted: #718096;
+        --border-color: #e2e8f0;
+        --card-bg: #ffffff;
+        --card-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+        --card-shadow-hover: 0 4px 6px rgba(0, 0, 0, 0.12);
+        --border-radius: 8px;
+        --transition-speed: 0.2s;
+    }
+
+    @media (prefers-color-scheme: dark) {
+        :root {
+            --primary-color: #4dabf7;
+            --primary-hover: #74c0fc;
+            --primary-bg: rgba(77, 171, 247, 0.1);
+            --primary-bg-hover: rgba(77, 171, 247, 0.15);
+            --text-color: #e2e8f0;
+            --text-muted: #a0aec0;
+            --border-color: #2d3748;
+            --card-bg: #1a202c;
+        }
     }
 
     body {
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
         line-height: 1.6;
-        background-color: var(--background-color);
+        color: var(--text-color);
     }
 
     nav {
-        margin-bottom: 2rem;
-        padding: 1rem 0;
-    }
-
-    nav strong {
-        font-weight: 700;
-        font-size: 1.3rem;
-        color: var(--primary-color);
-    }
-
-    nav ul li a {
-        border-radius: var(--border-radius);
-        padding: 0.5rem 1rem;
-        transition: all var(--transition-speed) ease;
-    }
-
-    nav ul li a:hover {
-        background-color: rgba(67, 97, 238, 0.1);
-    }
-
-    .nav-button {
-        background-color: var(--primary-color);
-        color: var(--text-light) !important;
-        padding: 0.4rem 0.8rem;
-        border-radius: var(--border-radius);
-        text-decoration: none;
-        transition: all var(--transition-speed) ease;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        display: inline-flex;
-        align-items: center;
-        gap: 0.4rem;
-        font-size: 0.95rem;
-    }
-
-    .nav-button:hover {
-        background-color: var(--primary-hover);
-        transform: translateY(-2px);
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-    }
-
-    .nav-button i {
-        font-size: 0.9rem;
-    }
-
-    .footer {
+        margin-bottom: 1.5rem;
+        padding: 0.8rem 0;
         display: flex;
         align-items: center;
         justify-content: space-between;
-        margin-top: 4rem;
-        padding-top: 1.5rem;
-        border-top: 1px solid var(--muted-border-color);
-        font-size: 0.95rem;
-        color: var(--muted-color);
+        gap: 1rem;
+    }
+
+    nav .brand {
+        font-weight: 600;
+        font-size: 1.2rem;
+        color: var(--primary-color);
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+        text-decoration: none;
+        white-space: nowrap;
+    }
+
+    nav .nav-links {
+        display: flex;
+        align-items: center;
+        gap: 0.8rem;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    nav .nav-item {
+        margin: 0;
+    }
+
+    nav .nav-link {
+        border-radius: var(--border-radius);
+        padding: 0.4rem 0.8rem;
+        transition: all var(--transition-speed) ease;
+        display: flex;
+        align-items: center;
+        gap: 0.3rem;
+        font-size: 0.9rem;
+        text-decoration: none;
+        color: var(--text-color);
+        white-space: nowrap;
+        background: transparent;
+    }
+
+    nav .nav-link:hover {
+        background-color: var(--primary-bg);
+        color: var(--primary-color);
+    }
+
+    nav .nav-link i {
+        font-size: 0.9rem;
+        min-width: 1.2em;
+        text-align: center;
+    }
+
+    nav .nav-link.active {
+        background-color: var(--primary-color);
+        color: var(--text-light);
+    }
+
+    nav .nav-link.active:hover {
+        background-color: var(--primary-hover);
     }
 
     table {
@@ -96,6 +118,8 @@
         border-spacing: 0;
         width: 100%;
         margin-bottom: 2rem;
+        background-color: var(--card-bg);
+        border: 1px solid var(--border-color);
     }
 
     thead {
@@ -113,8 +137,9 @@
 
     td {
         padding: 1rem;
-        border-bottom: 1px solid var(--muted-border-color);
+        border-bottom: 1px solid var(--border-color);
         vertical-align: middle;
+        color: var(--text-color);
     }
 
     tr:last-child td {
@@ -126,7 +151,7 @@
     }
 
     tbody tr:hover {
-        background-color: rgba(67, 97, 238, 0.05);
+        background-color: var(--primary-bg);
     }
 
     .dump-cache {
@@ -138,24 +163,24 @@
 
     button {
         background-color: var(--primary-color);
-        border-color: var(--primary-color);
+        border: none;
         color: var(--text-light);
         transition: all var(--transition-speed) ease;
         border-radius: var(--border-radius);
-        padding: 0.4rem 0.8rem;
+        padding: 0.4rem 1rem;
         font-weight: 500;
         display: inline-flex;
         align-items: center;
-        gap: 0.4rem;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        font-size: 0.95rem;
+        gap: 0.3rem;
+        box-shadow: var(--card-shadow);
+        font-size: 0.9rem;
+        cursor: pointer;
     }
 
     button:hover {
         background-color: var(--primary-hover);
-        border-color: var(--primary-hover);
-        transform: translateY(-3px);
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        transform: translateY(-1px);
+        box-shadow: var(--card-shadow-hover);
     }
 
     button.outline {
@@ -163,10 +188,11 @@
         color: var(--primary-color);
         box-shadow: none;
         border: 1px solid var(--primary-color);
+        padding: 0.4rem 1rem;
     }
 
     button.outline:hover {
-        background-color: rgba(67, 97, 238, 0.1);
+        background-color: var(--primary-bg);
         color: var(--primary-hover);
         border-color: var(--primary-hover);
     }
@@ -174,130 +200,77 @@
     .overflow-auto {
         overflow-x: auto;
         -webkit-overflow-scrolling: touch;
+        position: relative;
+        background-color: var(--card-bg);
+        border-radius: var(--border-radius);
+    }
+
+    .footer {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: 3rem;
+        padding-top: 1.5rem;
+        border-top: 1px solid var(--border-color);
+        font-size: 0.9rem;
+        color: var(--text-muted);
     }
 
     @media (max-width: 768px) {
         nav {
-            flex-direction: column;
+            flex-wrap: wrap;
+            padding: 0.6rem 0;
+            gap: 0.8rem;
         }
 
-        nav ul {
-            margin-top: 1rem;
-            width: 100%;
+        nav .brand {
+            margin-right: auto;
         }
 
-        nav ul li {
-            width: 100%;
-            margin-bottom: 0.5rem;
-        }
-
-        nav ul li a {
-            width: 100%;
-            text-align: center;
-            justify-content: center;
+        nav .nav-link {
+            padding: 0.3rem 0.6rem;
+            font-size: 0.85rem;
         }
 
         th, td {
             padding: 0.8rem;
-            font-size: 0.9rem;
-        }
-
-        .dump-cache {
-            margin: 1rem 0;
-        }
-
-        .dump-cache button {
-            width: auto;
-            min-width: 120px;
-            margin: 0.5rem 0;
-        }
-
-        table {
-            display: block;
-            overflow-x: auto;
-            white-space: nowrap;
-            -webkit-overflow-scrolling: touch;
-            margin: 0.5rem 0;
-        }
-
-        td button {
-            padding: 0.3rem 0.6rem;
             font-size: 0.85rem;
-            min-width: 80px;
         }
 
-        h2 {
-            font-size: 1.5rem;
-            margin-bottom: 1rem;
+        button {
+            padding: 0.3rem 0.8rem;
+            font-size: 0.85rem;
         }
 
         .footer {
             margin-top: 2rem;
             padding-top: 1rem;
-            text-align: center;
-            justify-content: center;
         }
     }
 
     @media (max-width: 480px) {
-        .container {
-            padding: 0.5rem;
+        nav {
+            padding: 0.5rem 0;
+            gap: 0.6rem;
         }
 
-        h2 {
-            font-size: 1.3rem;
+        nav .brand {
+            font-size: 1.1rem;
+        }
+
+        nav .nav-link {
+            padding: 0.25rem 0.5rem;
+            font-size: 0.8rem;
         }
 
         th, td {
             padding: 0.6rem;
-            font-size: 0.85rem;
-        }
-
-        td button, td a {
-            padding: 0.25rem 0.5rem;
             font-size: 0.8rem;
-            min-width: 70px;
         }
 
-        .dump-cache button {
-            padding: 0.35rem 0.7rem;
-            font-size: 0.9rem;
-            min-width: 100px;
-        }
-    }
-
-    /* 添加横向滚动提示 */
-    .overflow-auto {
-        position: relative;
-    }
-
-    .overflow-auto::after {
-        content: "← 左右滑动查看更多 →";
-        position: absolute;
-        bottom: -1.5rem;
-        left: 50%;
-        transform: translateX(-50%);
-        font-size: 0.8rem;
-        color: var(--muted-color);
-        white-space: nowrap;
-        animation: fadeOut 3s forwards;
-        animation-delay: 3s;
-    }
-
-    @keyframes fadeOut {
-        from { opacity: 1; }
-        to { opacity: 0; }
-    }
-
-    @media (prefers-color-scheme: dark) {
-        :root {
-            --primary-color: #4dabf7;
-            --primary-hover: #74c0fc;
-            --accent-color: #f783ac;
-        }
-
-        tbody tr:hover {
-            background-color: rgba(77, 171, 247, 0.05);
+        button {
+            padding: 0.25rem 0.6rem;
+            font-size: 0.8rem;
         }
     }
     </style>
@@ -307,13 +280,29 @@
 <body>
     <header class="container">
         <nav>
-            <ul class="contrast">
-                <li><strong><i class="fas fa-book"></i> BOOKO-DAV</strong></li>
-            </ul>
-            <ul>
-                <li><a href="/dav"><i class="fas fa-book-open"></i> 使用指南</a></li>
-                <li><a href="/dav/upload"><i class="fas fa-upload"></i> 上传</a></li>
-                <li><a href="/dav/list" class="nav-button"><i class="fas fa-list"></i> 查看文档</a></li>
+            <a href="/dav" class="brand">
+                <i class="fas fa-book"></i>
+                <span>BOOKO-DAV</span>
+            </a>
+            <ul class="nav-links">
+                <li class="nav-item">
+                    <a href="/dav" class="nav-link">
+                        <i class="fas fa-book-open"></i>
+                        <span>使用指南</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/dav/upload" class="nav-link">
+                        <i class="fas fa-upload"></i>
+                        <span>上传</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/dav/list" class="nav-link active">
+                        <i class="fas fa-list"></i>
+                        <span>查看文件</span>
+                    </a>
+                </li>
             </ul>
         </nav>
     </header>
@@ -385,7 +374,7 @@
                     `;
                     fileList.appendChild(row);
                 });
-                
+
                 // 如果没有文件，显示提示
                 if (fileList.children.length === 0) {
                     fileList.innerHTML = `<tr><td colspan="5" style="text-align: center;">无法加载文件列表或当前没有文件。</td></tr>`;
@@ -441,7 +430,7 @@
 
         // 页面加载时加载文件列表
         window.onload = loadFileList;
-        
+
         // 设置年份
         const yearElement = document.querySelector("#year")
         const year = new Date().getFullYear()
