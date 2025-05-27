@@ -19,7 +19,7 @@
           align-items: center;
           justify-content: space-between;
         }
-
+    
         .w3c {
           width: 64px;
         }
@@ -92,7 +92,7 @@
                         // 为每个文件创建表格行
                         const row = document.createElement('tr');
                         console.log("hrefhrefhrefhrefhrefhrefhrefhref",href);
-
+                        
                         row.innerHTML = `
                             <td>${decodeURIComponent(href.split('/').pop())}</td>
                             <td>${formatBytes(size)}</td>
@@ -156,9 +156,14 @@
         </script>
         <footer class="footer">
             <span>
-                <span id="year"></span> &copy; Atlas
+                <span id="year"></span> &copy; Joshua Rodrigues
 
             </span>
+            <a href="https://html5.validator.nu/?doc=https%3A%2F%2Fbookodav.joshuarodrigues.dev">
+                <img loading="lazy" class="w3c"
+                    src="https://github.com/bradleytaunt/html5-valid-badge/blob/master/html5-validator-badge-blue.png?raw=true"
+                    alt="HTML5有效">
+            </a>
         </footer>
     </main>
     <script>
