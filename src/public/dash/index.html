@@ -1,22 +1,185 @@
 <!DOCTYPE html>
 <html lang="zh">
 	<head>
-		<meta charset="utf-8" >
-		<meta name="viewport" content="width=device-width, initial-scale=1" >
-		<meta name="color-scheme" content="light dark" >
-		<meta name="description" content="一个自托管的WebDAV服务器，用于在KOReader和其他客户端之间传输图书。" >
-		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@yohns/picocss@2.2.10/css/pico.min.css" >
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="color-scheme" content="light dark">
+		<meta name="description" content="一个自托管的WebDAV服务器，用于在KOReader和其他客户端之间传输图书。">
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@yohns/picocss@2.2.10/css/pico.min.css">
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 		<style>
+			:root {
+				--primary-color: #4361ee;
+				--secondary-color: #3f37c9;
+				--accent-color: #4895ef;
+				--success-color: #4cc9f0;
+				--border-radius: 8px;
+			}
+
+			body {
+				font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+			}
+
+			.hero {
+				padding: 3rem 0;
+				text-align: center;
+				margin-bottom: 2rem;
+				background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+				color: white;
+				border-radius: var(--border-radius);
+			}
+
+			.hero h1 {
+				font-size: 2.5rem;
+				margin-bottom: 1rem;
+			}
+
+			.hero p {
+				font-size: 1.2rem;
+				max-width: 800px;
+				margin: 0 auto;
+			}
+
+			.feature-card {
+				background-color: var(--card-background-color);
+				border-radius: var(--border-radius);
+				padding: 1.5rem;
+				margin-bottom: 1.5rem;
+				box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+				transition: transform 0.3s ease, box-shadow 0.3s ease;
+			}
+
+			.feature-card:hover {
+				transform: translateY(-5px);
+				box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+			}
+
+			.feature-icon {
+				font-size: 2rem;
+				color: var(--primary-color);
+				margin-bottom: 1rem;
+			}
+
+			.card-grid {
+				display: grid;
+				grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+				gap: 1.5rem;
+				margin-bottom: 2rem;
+			}
+
 			.footer {
 				display: flex;
 				align-items: center;
 				justify-content: space-between;
+				margin-top: 3rem;
+				padding-top: 1.5rem;
+				border-top: 1px solid var(--muted-border-color);
 			}
-			 .w3c {
+
+			.w3c {
 				width: 64px;
 			}
-			.image{
-				width: 600px;
+
+			.image {
+				max-width: 100%;
+				height: auto;
+				border-radius: var(--border-radius);
+				box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+			}
+
+			.steps-container {
+				margin: 2rem 0;
+			}
+
+			.step {
+				margin-bottom: 2rem;
+				padding: 1.5rem;
+				border-radius: var(--border-radius);
+				background-color: var(--card-background-color);
+				box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+			}
+
+			.step h5 {
+				display: flex;
+				align-items: center;
+				margin-bottom: 1rem;
+				color: var(--primary-color);
+			}
+
+			.step-number {
+				display: inline-flex;
+				align-items: center;
+				justify-content: center;
+				width: 30px;
+				height: 30px;
+				background-color: var(--primary-color);
+				color: white;
+				border-radius: 50%;
+				margin-right: 0.75rem;
+				font-weight: bold;
+			}
+
+			.nav-button {
+				background-color: var(--primary-color);
+				color: white;
+				padding: 0.5rem 1rem;
+				border-radius: var(--border-radius);
+				text-decoration: none;
+				transition: background-color 0.3s ease;
+			}
+
+			.nav-button:hover {
+				background-color: var(--secondary-color);
+			}
+
+			.important-links {
+				background-color: var(--card-background-color);
+				border-radius: var(--border-radius);
+				padding: 1.5rem;
+				margin-top: 2rem;
+			}
+
+			.important-links h3 {
+				margin-top: 0;
+				color: var(--primary-color);
+				border-bottom: 2px solid var(--primary-color);
+				padding-bottom: 0.5rem;
+				margin-bottom: 1rem;
+			}
+
+			.link-item {
+				margin-bottom: 1rem;
+				padding-bottom: 1rem;
+				border-bottom: 1px solid var(--muted-border-color);
+			}
+
+			.link-item:last-child {
+				border-bottom: none;
+				margin-bottom: 0;
+				padding-bottom: 0;
+			}
+
+			.link-item a {
+				font-weight: bold;
+				color: var(--primary-color);
+			}
+
+			.link-item p {
+				margin: 0.5rem 0 0 0;
+			}
+
+			@media (max-width: 768px) {
+				.card-grid {
+					grid-template-columns: 1fr;
+				}
+
+				.hero {
+					padding: 2rem 1rem;
+				}
+
+				.hero h1 {
+					font-size: 2rem;
+				}
 			}
 		</style>
 		<title>Booko-DAV</title>
@@ -30,156 +193,42 @@
 				</ul>
 				<ul>
 					<li>
-						<small>
-							<a href="/dav">控制面板</a>
-						</small>
+						<a href="/dav" class="nav-button">
+							<i class="fas fa-tachometer-alt"></i> 控制面板
+						</a>
 					</li>
 				</ul>
 			</nav>
 		</header>
+
 		<main class="container">
-			<article>
-				<h3>这是什么？</h3>
-				<p>
-					Booko-DAV 是"书籍"、
-					<a href="https://koreader.rocks/" target="_blank">KOReader</a> 和 <a href="https://en.wikipedia.org/wiki/WebDAV">WebDAV</a> 的组合词。
-				</p>
-				<p>
-					它主要设计用作WebDAV服务器，用于在PC、手机和电子阅读器（在我的例子中是越狱的Kindle）之间传输和存储书籍。它可以自托管且<strong>基本免费</strong><em>（确切地说是每月10GB）</em>。
-					<a href="#pricing">查看价格</a>。
-				</p>
-			</article>
+			<section class="hero">
+				<h1>Booko-DAV</h1>
+				<p>一个自托管的WebDAV服务器，用于在KOReader和其他客户端之间轻松传输电子书</p>
+			</section>
 
-			<article>
-				<h3>为什么要做这个？</h3>
-				<p>
-					为了乐趣。市面上有很多WebDAV服务，但我想创建自己的版本，专门针对电子书社区，具有易部署和低成本的特点。
-				</p>
-			</article>
-			<article>
-				<h3>如何使用？</h3>
-				<h4>要求：Cloudflare账户、GitHub账户、移动设备或PC，以及信用卡。</h4>
-				<p>
-					<em>* 注意：以下所有链接都会在新标签页中打开，方便使用 *</em>
-				</p>
-				<ol>
-					<li>
-						<h5>设置Cloudflare账户</h5>
-						<ul>
-							<li>
-								前往 <a href="https://dash.cloudflare.com/login" target="_blank">Cloudflare控制面板</a> 并创建账户（可使用Google登录）。如果已有账户，请登录。
-							</li>
-							<li>在控制面板侧边栏，前往 <strong>R2对象存储</strong>。完成账单详情并提交。</li>
-							<li>在R2对象存储下，点击 <strong>+ 创建存储桶</strong></li>
-							<li>
-								<strong>将存储桶命名为 <u>bookodav</u></strong>（区分大小写）
-							</li>
-							<li>
-								<img class="image" src="https://res.cloudinary.com/dt1unishx/image/upload/v1745350922/Screenshot_2025-04-23_000023_jbdwnb.png" alt="存储桶示例">
-							</li>
-							<li>保留默认选项并创建存储桶。</li>
-							<li>通过个人资料菜单前往 <a target="_blank" href="https://dash.cloudflare.com/profile/api-tokens">API令牌</a>。</li>
-							<li>
-								点击 <strong><u>创建令牌</u></strong> 并选择 <strong>编辑Cloudflare Workers</strong> 模板。
-							</li>
-							<li>在账户资源下拉菜单中选择您的账户，在区域资源下选择所有区域。</li>
-							<li>
-								<img class="image" src="https://res.cloudinary.com/dt1unishx/image/upload/v1745350938/Screenshot_2025-04-23_000214_mq4jzd.png" alt="令牌示例">
-							</li>
-							<li>创建令牌并保存。从控制面板URL保存您的账户ID (https://dash.cloudflare.com/{AccountId}/home)。</li>
-						</ul>
-					</li>
-					<li>
-						<h5>GitHub账户</h5>
-						<ul>
-							<li>创建/登录到 <a target="_blank" href="https://github.com/">GitHub</a></li>
-							<li>访问 <a target="_blank" href="https://github.com/Joshuajrodrigues/bookodav">仓库</a></li>
-							<li>通过点击此处复刻它</li>
-							<li>
-								<img class="image" src="https://res.cloudinary.com/dt1unishx/image/upload/v1745350980/Screenshot_2025-04-23_003503_enhe6n.png" alt="复刻">
-							</li>
-							<li>前往设置 =&gt; 密钥和变量 =&gt; 操作</li>
-							<li>点击新建仓库密钥</li>
-							<li>
-								<img class="image" src="https://res.cloudinary.com/dt1unishx/image/upload/v1745350950/Screenshot_2025-04-23_002507_hw0ugn.png" alt="密钥">
-							</li>
-							<li>添加名称为CF_API_TOKEN</li>
-							<li>在密钥*部分粘贴您之前创建的API密钥，点击添加密钥</li>
-							<li>前往操作并启用工作流</li>
-							<li>
-								<img class="image" src="https://res.cloudinary.com/dt1unishx/image/upload/v1745350953/Screenshot_2025-04-23_002632_zuevrs.png" alt="操作">
-							</li>
-							<li>
-								前往部署并点击运行工作流
-							</li>
-							<li>
-								<img class="image" src="https://res.cloudinary.com/dt1unishx/image/upload/v1745350959/Screenshot_2025-04-23_002655_c98byf.png" alt="工作流">
-							</li>
-							<li>
-								如果再次点击操作，您应该会看到这个
-							</li>
-							<li><img class="image" src="https://res.cloudinary.com/dt1unishx/image/upload/v1745350957/Screenshot_2025-04-23_002741_ssiydj.png" alt="工作流完成"></li>
-						</ul>
-					</li>
-					<li>
-						<h5>访问</h5>
-						<ul>
-							<li>在Cloudflare控制面板中，前往计算 → Workers → <b>bookodav-worker</b>。</li>
-							<li>
-								<img class="image" src="https://res.cloudinary.com/dt1unishx/image/upload/v1745350965/Screenshot_2025-04-23_002806_hww0vf.png" alt="访问">
-							</li>
-							<li>在设置 → 变量下，选择类型为SECRET，添加USERNAME和PASSWORD（区分大小写）并部署。</li>
-							<li>
-								<img class="image" src="https://res.cloudinary.com/dt1unishx/image/upload/v1745350990/Screenshot_2025-04-23_004933_nyxilz.png" alt="用户名">
-							</li>
-							<li>
-								<img class="image" src="https://res.cloudinary.com/dt1unishx/image/upload/v1745350991/Screenshot_2025-04-23_004847_msorqy.png" alt="密码">
-							</li>
-							<li>在workers.dev域名找到您的访问URL（例如，bookodav-worker.username.workers.dev/dav）。</li>
-							<li>
-								<img class="image" src="https://res.cloudinary.com/dt1unishx/image/upload/v1745350977/Screenshot_2025-04-23_002855_squ7f8.png" alt="访问">
-							</li>
-						</ul>
-					</li>
-				</ol>
-			</article>
-			<article>
-				<h3>重要链接</h3>
-				<ol>
-					<li>
-						<a target="_blank" href="http://dash.cloudflare.com">Cloudflare控制面板</a>
-						<p>监控存储、请求和账单。比内置文档表格更好用。</p>
-					</li>
-					<li id="pricing">
-						<a target="_blank" href="https://developers.cloudflare.com/r2/pricing/">Cloudflare R2定价</a>
-						<p>10GB免费存储。大量缓存可减少账单，但可能导致轻微的不一致。</p>
-					</li>
-					<li>
-						<a target="_blank" href="https://developers.cloudflare.com/workers/platform/pricing/">Cloudflare Workers定价</a>
-						<p>每日包含100,000次请求（上传、下载、删除）。</p>
-					</li>
-					<li>
-						<p>
-							Booko-DAV使用Cloudflare Workers技术。
-							<a target="_blank" href="https://developers.cloudflare.com/workers/reference/how-workers-works/">
-								了解更多关于Workers的信息。
-							</a>
-						</p>
-					</li>
-				</ol>
-			</article>
+			<div class="card-grid">
+				<div class="feature-card">
+					<div class="feature-icon"><i class="fas fa-book-reader"></i></div>
+					<h3>电子书管理</h3>
+					<p>轻松在PC、手机和电子阅读器之间传输和管理您的电子书籍。</p>
+				</div>
+				<div class="feature-card">
+					<div class="feature-icon"><i class="fas fa-cloud"></i></div>
+					<h3>自托管云存储</h3>
+					<p>使用Cloudflare提供的每月10GB免费存储空间，无需依赖第三方服务。</p>
+				</div>
+				<div class="feature-card">
+					<div class="feature-icon"><i class="fas fa-lock"></i></div>
+					<h3>安全可靠</h3>
+					<p>通过WebDAV协议安全传输文件，使用您自己的用户名和密码保护访问。</p>
+				</div>
+			</div>
 
-			<footer class="footer">
-				<span> <span id="year"></span> © Joshua Rodrigues </span>
-				<a href="https://html5.validator.nu/?doc=https%3A%2F%2Fbookodav.joshuarodrigues.dev">
-					<img
-						loading="lazy"
-						class="w3c"
-						src="https://github.com/bradleytaunt/html5-validator-badge/blob/master/html5-validator-badge-blue.png?raw=true"
-						alt="HTML5有效"
-					>
-				</a>
-			</footer>
+
+
+		
+
 		</main>
 		<script>
 			document.querySelector('#year').textContent = new Date().getFullYear();
