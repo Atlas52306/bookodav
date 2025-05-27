@@ -41,9 +41,12 @@
    * https://developers.cloudflare.com/workers/static-assets/binding/
    */
    "assets": {
-     "directory": "./src/public/",
+     "directory": "./src/public",
      "binding": "ASSETS",
-     "include": ["**/*.html", "**/*.css", "**/*.ico", "**/*.png"]
+     "include": ["**/*.html", "**/*.css", "**/*.ico", "**/*.png"],
+     "exclude": [],
+     "browser_TTL": 604800,
+     "serve_single_page_app": true
    }
   /**
    * Service Bindings (communicate between multiple Workers)

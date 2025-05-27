@@ -3,45 +3,52 @@ import upload from '../src/public/dash/upload.html'
 import list from '../src/public/dash/list.html'
 import instructions from '../src/public/dash/wiki.html'
 import notfoundpage from '../src/public/dash/404.html'
-import styles from '../src/public/dash/styles.css'
 import { corsHeaders, is_authorized } from './utils'
 import { dumpCache, handleDeleteFile, handleFileList, handleGetFile, handleMultpleUploads, handlePutFile } from './handlers'
 // MIME type mapping based on file extensions
 
 const AUTH_REALM = 'BOOKO-DAV';
 
-
-
-function handleUiRouting(path) {
-
+function handleStaticAssets(path) {
+	// 处理 HTML 页面
 	switch (path) {
 		case "/":
-			return html
+			return {
+				content: html,
+				contentType: 'text/html; charset=utf-8'
+			};
 		case "/dav/upload":
-			return upload
+			return {
+				content: upload,
+				contentType: 'text/html; charset=utf-8'
+			};
 		case "/dav/list":
-			return list
+			return {
+				content: list,
+				contentType: 'text/html; charset=utf-8'
+			};
 		case "/dav":
-			return instructions;
-		case "/dav/styles.css":
-			return styles;
+			return {
+				content: instructions,
+				contentType: 'text/html; charset=utf-8'
+			};
 		default:
-			return notfoundpage;
+			return {
+				content: notfoundpage,
+				contentType: 'text/html; charset=utf-8'
+			};
 	}
 }
 
 export default {
 	async fetch(request, env, ctx) {
-		// Extract the Authorization header
 		const authorization_header = request.headers.get("Authorization") || "";
-
 		const url = new URL(request.url);
 		let path = url.pathname;
 
 		// 处理静态资源
 		if (request.method === "GET" && (path === "/" || path.startsWith("/dav"))) {
-			const content = handleUiRouting(path);
-			const contentType = path.endsWith('.css') ? 'text/css; charset=utf-8' : 'text/html; charset=utf-8';
+			const { content, contentType } = handleStaticAssets(path);
 			
 			// 添加 CORS 头，允许样式文件被跨域访问
 			const headers = {
@@ -54,26 +61,23 @@ export default {
 		}
 
 		if (request.method === "GET" && path === "/favicon.ico") {
-			// Fetch favicon from R2 bucket
 			const favicon = './favicon.ico'
-
 			if (!favicon) {
 				return new Response("Favicon not found", { status: 404 });
 			}
-
 			return new Response(favicon.body, {
 				headers: {
 					"Content-Type": "image/x-icon",
-					"Cache-Control": "public, max-age=604800" // 1 week
+					"Cache-Control": "public, max-age=604800"
 				}
 			});
 		}
 
+		// 对于非静态资源的请求，需要进行身份验证
 		if (
 			request.method !== "OPTIONS" &&
 			!(await is_authorized(authorization_header, env.USERNAME, env.PASSWORD))
 		) {
-			// Return 401 Unauthorized if credentials are invalid
 			return new Response("Unauthorized", {
 				status: 401,
 				headers: {
@@ -81,9 +85,6 @@ export default {
 				},
 			});
 		}
-
-
-		// dashboard
 
 		if (request.method === "GET" && path === "/dumpcache") {
 			return dumpCache(request, env, ctx);
@@ -97,16 +98,18 @@ export default {
 			return handleDeleteFile(request, env, ctx);
 		}
 
-		// Upload multiple files via POST /upload
 		if (request.method === "POST" && path === "/upload") {
 			return handleMultpleUploads(request, env, ctx)
 		}
+
 		if (request.method === "GET") {
 			return handleGetFile(request, env, ctx)
 		}
+
 		if (request.method === "PROPFIND") {
 			return handleFileList(request, env, ctx)
 		}
+
 		return new Response("Method not allowed", { status: 405, headers: corsHeaders });
 	},
 };
