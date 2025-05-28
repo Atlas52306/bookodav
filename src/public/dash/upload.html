@@ -462,12 +462,6 @@
       </a>
       <ul class="nav-links">
         <li class="nav-item">
-          <a href="/dav" class="nav-link">
-            <i class="fas fa-book-open"></i>
-            <span>使用指南</span>
-          </a>
-        </li>
-        <li class="nav-item">
           <a href="/dav/upload" class="nav-link active">
             <i class="fas fa-upload"></i>
             <span>上传</span>
@@ -492,12 +486,12 @@
             <div class="file-input-wrapper">
               <div class="custom-file-input">
                 <input type="file" id="files" name="files" required multiple
-                  accept=".epub,.pdf,.mobi,.cbr,.cbz,.jpg,.jpeg,.png,.gif,.webp,.txt">
+                  accept=".epub,.pdf,.mobi,.cbr,.cbz,.txt">
                 <label for="files" class="file-input-trigger" id="fileInputLabel">
                   <i class="fas fa-file-upload"></i>
                   <span class="placeholder">点击此处选择要上传的文件</span>
                 </label>
-                <span class="file-types">支持格式：电子书(epub、pdf、mobi)、漫画(cbr、cbz)、图片(jpg、jpeg、png、gif、webp)、文本(txt)</span>
+                <span class="file-types">支持格式：电子书(epub、pdf、mobi)、漫画(cbr、cbz)、文本(txt)</span>
               </div>
             </div>
             <div class="upload-actions">
@@ -511,14 +505,14 @@
         <div id="uploadStatus" class="upload-status"></div>
       </div>
     </section>
-    
+
     <footer class="footer">
       <span>
         <span id="year"></span> &copy; Atlas
       </span>
     </footer>
   </main>
-  
+
   <script>
     const yearElement = document.querySelector("#year")
     const year = new Date().getFullYear()
@@ -532,8 +526,7 @@
       const fileInput = document.getElementById('files');
 
       // 服务器配置中允许的文件类型
-      const allowedTypes = ['epub', 'pdf', 'mobi', 'cbr', 'cbz',
-        'jpg', 'jpeg', 'png', 'gif', 'webp', 'txt'];
+      const allowedTypes = ['epub', 'pdf', 'mobi', 'cbr', 'cbz', 'txt'];
 
       // 最大文件大小（100MB）
       const MAX_FILE_SIZE = 100 * 1024 * 1024;
@@ -649,7 +642,7 @@
       fileInput.addEventListener('change', function(e) {
         const label = document.getElementById('fileInputLabel');
         const placeholder = label.querySelector('.placeholder');
-        
+
         if (this.files.length > 0) {
           label.classList.add('has-files');
           placeholder.textContent = `已选择 ${this.files.length} 个文件 (点击更改)`;

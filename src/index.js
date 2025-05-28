@@ -1,7 +1,6 @@
 import html from '../src/public/dash/index.html'
 import upload from '../src/public/dash/upload.html'
 import list from '../src/public/dash/list.html'
-import instructions from '../src/public/dash/wiki.html'
 import notfoundpage from '../src/public/dash/404.html'
 import { corsHeaders, securityHeaders, is_authorized } from './utils'
 import { dumpCache, handleDeleteFile, handleFileList, handleGetFile, handleMultpleUploads, handlePutFile } from './handlers'
@@ -32,7 +31,7 @@ function handleStaticAssets(path) {
 			};
 		case "/dav":
 			return {
-				content: instructions,
+				content: html,
 				contentType: 'text/html; charset=utf-8'
 			};
 		default:
@@ -102,21 +101,7 @@ export default {
 				});
 			}
 
-			// 处理静态资源
-			if (request.method === "GET" && (path === "/" || path.startsWith("/dav"))) {
-				const { content, contentType } = handleStaticAssets(path);
-				
-				// 添加 CORS 头和安全头，允许样式文件被跨域访问
-				const headers = {
-					"Content-Type": contentType,
-					"Cache-Control": "public, max-age=604800",
-					"Access-Control-Allow-Origin": "*",
-					...securityHeaders
-				};
-				
-				return new Response(content, { headers });
-			}
-
+			// 处理favicon请求，不需要鉴权
 			if (request.method === "GET" && path === "/favicon.ico") {
 				const favicon = './favicon.ico'
 				if (!favicon) {
@@ -130,7 +115,7 @@ export default {
 				});
 			}
 
-			// 对于非静态资源的请求，需要进行身份验证
+			// 对于所有其他请求，需要进行身份验证
 			if (
 				request.method !== "OPTIONS" &&
 				!(await is_authorized(authorization_header, env.USERNAME, env.PASSWORD))
@@ -141,6 +126,21 @@ export default {
 						"WWW-Authenticate": `Basic realm="${AUTH_REALM}"`,
 					},
 				});
+			}
+
+			// 鉴权通过后处理静态资源
+			if (request.method === "GET" && (path === "/" || path.startsWith("/dav"))) {
+				const { content, contentType } = handleStaticAssets(path);
+				
+				// 添加 CORS 头和安全头，允许样式文件被跨域访问
+				const headers = {
+					"Content-Type": contentType,
+					"Cache-Control": "public, max-age=604800",
+					"Access-Control-Allow-Origin": "*",
+					...securityHeaders
+				};
+				
+				return new Response(content, { headers });
 			}
 
 			if (request.method === "GET" && path === "/dumpcache") {

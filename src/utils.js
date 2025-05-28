@@ -7,13 +7,6 @@ export const mimeTypes = {
 	cbz: "application/x-cbz", // Comic Book ZIP
 	txt: "text/plain", // Plain text files
 
-	// Images
-	jpg: "image/jpeg",
-	jpeg: "image/jpeg",
-	png: "image/png",
-	gif: "image/gif",
-	webp: "image/webp",
-
 	// Fallback
 	default: "application/octet-stream",
 };
@@ -85,18 +78,6 @@ export function validateFileContent(extension, data) {
 			// PDF 头部应该以 %PDF- 开头
 			return firstBytes[0] === 0x25 && firstBytes[1] === 0x50 && 
 				   firstBytes[2] === 0x44 && firstBytes[3] === 0x46;
-		case 'jpg':
-		case 'jpeg':
-			// JPEG 以 FF D8 开头
-			return firstBytes[0] === 0xFF && firstBytes[1] === 0xD8;
-		case 'png':
-			// PNG 头部
-			return firstBytes[0] === 0x89 && firstBytes[1] === 0x50 && 
-				   firstBytes[2] === 0x4E && firstBytes[3] === 0x47;
-		case 'gif':
-			// GIF 头部
-			return firstBytes[0] === 0x47 && firstBytes[1] === 0x49 && 
-				   firstBytes[2] === 0x46 && firstBytes[3] === 0x38;
 		default:
 			return true; // 对于其他类型，默认通过
 	}
